@@ -23,6 +23,7 @@ private:
   static QMutex logMutex;
 };
 
+// FIXME clear old logs
 class LogWriter : public QObject {
   Q_OBJECT
 public:
@@ -36,8 +37,6 @@ public slots:
 private:
   QString m_filePath;
   QTimer m_timer;
-
-  void cleanOldFiles(const QString &dirPath, int daysOld);
 };
 
 #endif // LOGGER_H

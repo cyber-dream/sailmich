@@ -19,7 +19,7 @@ Page {
     Component.onCompleted: {
         const resAlbums = Albums.q_updateAlbumsListModel(GlobalAlbumsList)
         resAlbums.finished.connect(function () {
-            if (resAlbums.code === ResultVariantPromise.Failed) {
+            if (!resAlbums.code.isSucceeded) {
                 console.error(resAlbums.error)
             } else {
                 console.log("albums model updated", GlobalAlbumsList.rowCount())
@@ -27,7 +27,7 @@ Page {
         })
         const r = Albums.q_updateAlbumModel(tModel)
         r.finished.connect(function () {
-            if (r.code === ResultVariantPromise.Failed) {
+            if (!resAlbums.code.isSucceeded) {
                 console.error(r.error)
             } else {
                 console.log("updateAlbumModels no errors")

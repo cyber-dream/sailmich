@@ -3,7 +3,6 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
-#include <QDirIterator>
 #include <QFile>
 #include <QMessageLogContext>
 #include <QMutex>
@@ -59,7 +58,7 @@ LogWriter::LogWriter(int pInterval, QObject *parent) : QObject(parent) {
       QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/logs";
   QDir dir(logsPath);
 
-  if (!dir.exists()) { // TODO fallback dir to logs
+  if (!dir.exists()) {
     if (dir.mkpath(".")) {
       //      qWarning() << "logs folder created";
     } else {
@@ -67,7 +66,7 @@ LogWriter::LogWriter(int pInterval, QObject *parent) : QObject(parent) {
       //      logsPath = "/tmp/sailmich-log.txt";
     }
   } else {
-    //    qWarning() << "logs forlder exists";
+    //    qWarning() << "logs forlder exists"; //TODO
   }
 
   m_filePath = (logsPath + "/" + uuidStr(QUuid::createUuid()) + ".txt");
@@ -75,31 +74,6 @@ LogWriter::LogWriter(int pInterval, QObject *parent) : QObject(parent) {
   m_timer.setInterval(pInterval);
   connect(&m_timer, &QTimer::timeout, this, &LogWriter::flushQueue);
   m_timer.start();
-
-  QTimer::singleShot(100, this,
-                     [this, logsPath]() { this->cleanOldFiles(logsPath, 2); });
-}
-
-void LogWriter::cleanOldFiles(const QString &dirPath, int daysOld) {
-  QDir dir(dirPath);
-  if (!dir.exists())
-    return;
-
-  QDirIterator it(dirPath, QDir::Files | QDir::NoDotAndDotDot);
-  QDateTime limitDate = QDateTime::currentDateTime().addDays(-daysOld);
-
-  while (it.hasNext()) {
-    it.next();
-    QFileInfo fileInfo = it.fileInfo();
-
-    if (fileInfo.lastModified() < limitDate) {
-      if (QFile::remove(fileInfo.absoluteFilePath())) {
-        qDebug() << "deleted old log file:" << fileInfo.fileName();
-      } else {
-        qDebug() << "can't delete log file:" << fileInfo.fileName();
-      }
-    }
-  }
 }
 
 LogWriter::~LogWriter() {

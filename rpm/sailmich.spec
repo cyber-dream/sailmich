@@ -1,8 +1,8 @@
 Name:       sailmich
 
-Summary:    Native client for Immich
+Summary:    First release
 Version:    0.1
-Release:    2
+Release:    1
 License:    LICENSE
 URL:        https://forum.sailfishos.org/t/native-immich-client/26075
 Source0:    %{name}-%{version}.tar.bz2
