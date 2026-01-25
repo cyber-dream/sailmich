@@ -1,0 +1,21 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=sailmich
+Exec=sailmich
+Name=sailmich
+# translation example:
+# your app name in German locale (de)
+#
+# Remember to comment out the following line, if you do not want to use
+# a different app name in German locale (de).
+#Name[de]=sailmich
+
+[X-Sailjail]
+Sandboxing=Disabled
+# Replace with your organization as a reverse domain name
+#OrganizationName=ru.brzezinski
+# ApplicationName does not have to be identical to Name
+#ApplicationName=harbour-immich
+# Add the required permissions here
+#Permissions=UserDirs;Internet;Secrets
