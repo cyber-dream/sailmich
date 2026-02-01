@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1">
+<TS version="2.1" language="nb_NO">
 <context>
     <name></name>
     <message id="authPage.immichAccount">
         <location filename="../qml/pages/AuthDialog.qml" line="34"/>
         <source>Immich Account</source>
         <extracomment>Label about account type</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Immich-konto</translation>
     </message>
     <message id="authPage.Login">
         <location filename="../qml/pages/AuthDialog.qml" line="37"/>
         <source>Login</source>
         <extracomment>DialogPage header start login button</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="authPage.addressFieldName">
-        <location filename="../qml/pages/AuthDialog.qml" line="48"/>
-        <location filename="../qml/pages/AuthDialog.qml" line="61"/>
-        <source>Address</source>
-        <extracomment>Form address field name</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Pålogging</translation>
     </message>
     <message id="authPage.addressHint">
         <location filename="../qml/pages/AuthDialog.qml" line="57"/>
@@ -28,12 +21,25 @@
         <extracomment>Address format hint in auth form (showing when regexp validator failed)</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message id="authPage.passwordFieldName">
+        <location filename="../qml/pages/AuthDialog.qml" line="101"/>
+        <source>Password</source>
+        <extracomment>Form password field name</extracomment>
+        <translation>Passord</translation>
+    </message>
+    <message id="authPage.addressFieldName">
+        <location filename="../qml/pages/AuthDialog.qml" line="48"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="61"/>
+        <source>Address</source>
+        <extracomment>Form address field name</extracomment>
+        <translation>Adresse</translation>
+    </message>
     <message id="authPage.emailFieldName">
         <location filename="../qml/pages/AuthDialog.qml" line="72"/>
         <location filename="../qml/pages/AuthDialog.qml" line="88"/>
         <source>Email</source>
         <extracomment>Form email field name</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>E-post</translation>
     </message>
     <message id="authPage.emailHint">
         <location filename="../qml/pages/AuthDialog.qml" line="84"/>
@@ -41,11 +47,11 @@
         <extracomment>Email format hint in auth form (showing when regexp validator failed)</extracomment>
         <translation type="unfinished"></translation>
     </message>
-    <message id="authPage.passwordFieldName">
-        <location filename="../qml/pages/AuthDialog.qml" line="101"/>
-        <source>Password</source>
-        <extracomment>Form password field name</extracomment>
-        <translation type="unfinished"></translation>
+    <message id="assetDetailsPage.titleAbout">
+        <location filename="../qml/pages/AssetDetails.qml" line="18"/>
+        <source>About</source>
+        <extracomment>Title of asset details page</extracomment>
+        <translation>Om</translation>
     </message>
     <message id="common.assetId">
         <location filename="../qml/pages/AssetDetails.qml" line="24"/>
@@ -59,12 +65,6 @@
         <extracomment>Date of asset creation</extracomment>
         <translation type="unfinished"></translation>
     </message>
-    <message id="assetDetailsPage.titleAbout">
-        <location filename="../qml/pages/AssetDetails.qml" line="18"/>
-        <source>About</source>
-        <extracomment>Title of asset details page</extracomment>
-        <translation type="unfinished"></translation>
-    </message>
     <message id="common.ownerId">
         <location filename="../qml/pages/AssetDetails.qml" line="38"/>
         <source>Owner Id</source>
@@ -75,13 +75,13 @@
         <location filename="../qml/pages/AssetDetails.qml" line="45"/>
         <source>City</source>
         <extracomment>City where photo created</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>By</translation>
     </message>
     <message id="common.country">
         <location filename="../qml/pages/AssetDetails.qml" line="51"/>
         <source>Country</source>
         <extracomment>Country where photo created</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Land</translation>
     </message>
     <message id="common.livePhotoVideoId">
         <location filename="../qml/pages/AssetDetails.qml" line="57"/>
@@ -111,19 +111,19 @@
         <location filename="../qml/pages/AssetDetails.qml" line="81"/>
         <source>Duration</source>
         <extracomment>Duration of asset</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Varighet</translation>
     </message>
     <message id="common.isFavorite">
         <location filename="../qml/pages/AssetDetails.qml" line="87"/>
         <source>Is Favourite</source>
         <extracomment>Favourite or not bool flag</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>er en favoritt</translation>
     </message>
     <message id="common.isTrashed">
         <location filename="../qml/pages/AssetDetails.qml" line="98"/>
         <source>Is Trashed</source>
         <extracomment>Is this asset trashed bool flag</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>er kastet</translation>
     </message>
     <message id="common.localOffsetHours">
         <location filename="../qml/pages/AssetDetails.qml" line="108"/>
@@ -147,37 +147,37 @@
         <location filename="../qml/pages/AssetDetails.qml" line="126"/>
         <source>Visibility</source>
         <extracomment>Visibilty of asset (archive, timeline, hidden, locked)</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Synlighet</translation>
     </message>
     <message id="albumsPage.titleAlbums">
         <location filename="../qml/pages/AlbumsPage.qml" line="20"/>
         <source>Albums</source>
         <extracomment>Album in the plural</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message id="mainPage.settings">
         <location filename="../qml/pages/MainPage.qml" line="44"/>
         <source>Setting</source>
         <extracomment>Settings page pulley menu item</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Innstillinger</translation>
     </message>
     <message id="mainPage.Albums">
         <location filename="../qml/pages/MainPage.qml" line="55"/>
         <source>Albums</source>
         <extracomment>Albums page button</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Album</translation>
     </message>
     <message id="settingsPage.pulleyLogout">
         <location filename="../qml/pages/SettingsPage.qml" line="14"/>
         <source>Logout</source>
         <extracomment>Logout pulley menu item</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Logg ut</translation>
     </message>
     <message id="settingsPage.titleSettings">
         <location filename="../qml/pages/SettingsPage.qml" line="31"/>
         <source>Settings</source>
         <extracomment>Settings page title</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Innstillinger</translation>
     </message>
 </context>
 </TS>

@@ -118,5 +118,8 @@ SAILFISHAPP_LRELEASE = lrelease -idbased
 #LRELEASE_OPTIONS = -idbased
 #SAILFISHAPP_LRELEASE_OPTIONS = -idbased
 
-TRANSLATIONS += translations/sailmich-en_US.ts
+TRANSLATIONS += translations/sailmich-en_US.ts \
+ translations/sailmich-nb_NO.ts \
+ translations/sailmich-ru.ts
+
 

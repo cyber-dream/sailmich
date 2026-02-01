@@ -50,7 +50,7 @@
     <message id="assetDetailsPage.titleAbout">
         <location filename="../qml/pages/AssetDetails.qml" line="18"/>
         <source>About</source>
-        <extracomment>Title of page</extracomment>
+        <extracomment>Title of asset details page</extracomment>
         <translation>About</translation>
     </message>
     <message id="common.assetId">
