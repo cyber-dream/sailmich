@@ -114,8 +114,8 @@ Dialog {
             id: errorLabel
             visible: errorMsg.length === 0 ? false : true
             //% "Error: *error text*"
-            //: Error message on the auth page
-            text: "Error: " + errorMsg
+            //: "Error" prefix for prepend error message
+            text: qsTrId("authPage.Error") + ": " + errorMsg
             layer.enabled: true
             layer.effect: ShaderEffect {
                 property color color: Theme.errorColor
