@@ -14,7 +14,7 @@ Page {
 
             PageHeader {
                 //% "About"
-                //: Title of page
+                //: Title of asset details page
                 title: qsTrId("assetDetailsPage.titleAbout")
             }
 
