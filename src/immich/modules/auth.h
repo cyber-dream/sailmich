@@ -30,15 +30,15 @@ public:
 
   Result::Promise<bool> *validateToken();
 
-   Result::Promise<LoginResponse> *login(const QString &pAddress,
-                                      const QString &pEmail,
-                                      const QString &pPassword);
+  Result::Promise<LoginResponse> *login(const QString &pAddress,
+                                        const QString &pEmail,
+                                        const QString &pPassword);
 
-   Result::Promise<Api::Authentication::LogoutResponse> *logout();
+  Result::Promise<Api::Authentication::LogoutResponse> *logout();
 
   Q_INVOKABLE Result::PromiseVariant *q_login(const QString &pAddress,
-                                            const QString &pEmail,
-                                            const QString &pPassword);
+                                              const QString &pEmail,
+                                              const QString &pPassword);
 
   Q_INVOKABLE Result::PromiseVariant *q_logout();
 signals:

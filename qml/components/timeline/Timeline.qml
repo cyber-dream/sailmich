@@ -32,7 +32,8 @@ SilicaListView {
         }
     }
 
-    delegate: Loader { //TODO background item with reaction to tap
+    delegate: Loader {
+        //TODO background item with reaction to tap
         id: gridLoader
         sourceComponent: timebucketModel.revealStatus
                          === TimelineTimeBucketModel.Complete ? dayRowGrid : stubGrid
@@ -50,7 +51,7 @@ SilicaListView {
                     slideShowModel.setCurrentIndex(timeBucketDate, dayRowIndex,
                                                    localAssetIndex)
                     //                    console.log(slideShowModel.currentGlobalIndex)
-                    pageStack.push(Qt.resolvedUrl("../MediaViewer.qml"), {
+                    pageStack.push(Qt.resolvedUrl("../mediaviewer/MediaViewer.qml"), {
                                        "model": slideShowModel
                                    })
                 }

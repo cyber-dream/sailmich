@@ -17,8 +17,9 @@ Result::Result<bool> PingApi::ping() const {
         rep->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     if (statusCode == 404)
       return Result::Result<bool>(true);
-    return Result::Result<bool>(Result::Error(rep->errorString()));
+
+   return tl::make_unexpected(Result::Error(rep->errorString()));
   }
 
-  return Result::Result<bool>(true);
+  return {true};
 }

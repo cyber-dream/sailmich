@@ -7,10 +7,8 @@
 #include <QString>
 #include <QVector>
 #include <src/result/result.h>
-#include <tl-optional.h>
+#include <src/tl-optional.h>
 #include <type_traits>
-
-
 
 namespace Immich {
 namespace Api {
@@ -43,9 +41,9 @@ public:
     return QDateTime::fromString(input, "yyyy-MM-dd'T'HH:mm:ss.zzz");
   };
 
-//  inline static QString uuidStr(const QUuid &uuid) {
-//    return uuid.toString().replace("{", "").replace("}", "");
-//  };
+  //  inline static QString uuidStr(const QUuid &uuid) {
+  //    return uuid.toString().replace("{", "").replace("}", "");
+  //  };
 
   //  enum ValueType {
   //    DOUBLE_VALUE,
@@ -61,20 +59,22 @@ public:
   //                                        Result::Result<QVector<T>>>::type
   //  arrayValue(const QJsonValue &pJson) {
   //    if (!pJson.isArray()) {
-  //      return Result::Result<QVector<T>>("jsonObject not array");
+  //      return tl::make_unexpected(Result::Result<QVector<T>>("jsonObject not
+  //      array");
   //    }
 
   //    const auto jsonArr = pJson.toArray();
 
   //    QVector<T> arr(jsonArr.size());
   //    if (jsonArr.isEmpty())
-  //      return Result::Result<QVector<T>>(arr);
+  //      return tl::make_unexpected(Result::Result<QVector<T>>(arr);
 
   //    for (int idx = 0; idx < jsonArr.size(); ++idx) {
   //      arr[idx] = T(jsonArr[idx]);
 
   //      if (!arr[idx].isValid()) {
-  //        return Result::Result<QVector<T>>(arr[idx].errMessage());
+  //        return
+  //        tl::make_unexpected(Result::Result<QVector<T>>(arr[idx].errMessage());
   //      }
   //    }
   //  };
@@ -84,18 +84,19 @@ public:
   //                                        Result::Result<QVector<T>>>::type
   //  arrayValue(const QJsonValue &pJson) {
   //    if (!pJson.isArray()) {
-  //      return Result::Result<QVector<T>>("jsonObject not array");
+  //      return tl::make_unexpected(Result::Result<QVector<T>>("jsonObject not
+  //      array");
   //    }
 
   //    const auto jsonArr = pJson.toArray();
 
   //    QVector<T> arr(jsonArr.size());
   //    if (jsonArr.isEmpty())
-  //      return Result::Result<QVector<T>>(arr);
+  //      return tl::make_unexpected(Result::Result<QVector<T>>(arr);
 
   //    for (int idx = 0; idx < jsonArr.size(); ++idx) {
   //      if (const auto err = intValue(&arr[idx], jsonArr[idx])) {
-  //        return Result::Result<QVector<int>>(err);
+  //        return tl::make_unexpected(Result::Result<QVector<int>>(err);
   //      }
   //    }
   //  }
@@ -105,9 +106,9 @@ public:
   doubleValue(const QJsonValue &pJsonValue,
               const bool isNullAsZeroValue = false) {
     if (!isNullAsZeroValue && pJsonValue.isNull())
-      return {Result::Error("json value is null")};
+      return tl::make_unexpected(Result::Error("json value is null"));
     if (!pJsonValue.isDouble())
-      return {Result::Error("json value is not a double")};
+      return tl::make_unexpected(Result::Error("json value is not a double"));
 
     return {static_cast<T>(pJsonValue.toDouble())};
   };
@@ -128,40 +129,42 @@ public:
   inline static Result::Result<T>
   intValue(const QJsonValue &pJsonValue, const bool isNullAsZeroValue = false) {
     if (!isNullAsZeroValue && pJsonValue.isNull())
-      return {Result::Error("json value is null")};
+      return tl::make_unexpected(Result::Error("json value is null"));
     if (!pJsonValue.isDouble())
-      return {Result::Error("json value is not a double")};
+      return tl::make_unexpected(Result::Error("json value is not a double"));
 
     return {static_cast<T>(pJsonValue.toInt())};
   };
 
   template <typename T>
-  inline static Result::Result<T> *
+  inline static Result::Result<T>
   uintValue(const QJsonValue &pJsonValue,
             const bool isNullAsZeroValue = false) {
     const auto res = intValue<int64_t>(pJsonValue, isNullAsZeroValue);
-    if (!res.isSucceeded())
+    if (!res.has_value())
       return res;
-    if (res.data() <= 0)
-      return new Result::Error("uint value is lesser than zero (" +
-                             QVariant::fromValue(res.data()).toString() + ")");
-    return nullptr;
+    if (res.value() <= 0)
+      return tl::make_unexpected(
+          Result::Error("uint value is lesser than zero (" +
+                        QVariant::fromValue(res.value()).toString() + ")"));
+    return nullptr; // FIXME
   };
 
   inline static Result::Result<QDate>
   QDateValue(const QJsonValue &pJsonValue, const bool isNullAsZeroValue = false,
              const QString &formatString = "yyyy-MM-dd") {
     if (!isNullAsZeroValue && pJsonValue.isNull())
-      return {Result::Error("json value is null")};
+      return tl::make_unexpected(Result::Error(QString("json value is null")));
     if (!pJsonValue.isString())
-      return Result::Result<QDate>(Result::Error("json value is not a string"));
+      return tl::make_unexpected(
+          Result::Error(QString("json value is not a string")));
 
     const auto date = QDate::fromString(pJsonValue.toString(), formatString);
 
     if (date.isNull())
-      return Result::Result<QDate>(Result::Error("date is null"));
+      return tl::make_unexpected(Result::Error("date is null"));
     if (!date.isValid())
-      return Result::Result<QDate>(Result::Error("date is invalid"));
+      return tl::make_unexpected(Result::Error("date is invalid"));
 
     return Result::Result<QDate>(date);
   };
@@ -170,17 +173,16 @@ public:
   QDateTimeISOValue(const QJsonValue pJsonValue,
                     const bool isNullAsZeroValue = false) {
     if (!isNullAsZeroValue && pJsonValue.isNull())
-      return {Result::Error("json value is null")};
+      return tl::make_unexpected(Result::Error("json value is null"));
     if (!pJsonValue.isString())
-      return Result::Result<QDateTime>(
-          Result::Error("json value is not a string"));
+      return tl::make_unexpected(Result::Error("json value is not a string"));
 
     const auto dateTime = parseIsoTime(pJsonValue.toString());
 
     if (dateTime.isNull())
-      return Result::Result<QDateTime>(Result::Error("date is null"));
+      return tl::make_unexpected(Result::Error("date is null"));
     if (!dateTime.isValid())
-      return Result::Result<QDateTime>(Result::Error("date is invalid"));
+      return tl::make_unexpected(Result::Error("date is invalid"));
 
     return Result::Result<QDateTime>(dateTime);
   }
@@ -201,14 +203,14 @@ public:
   QUuidValue(const QJsonValue &pJsonValue,
              const bool isNullAsZeroValue = false) {
     if (!isNullAsZeroValue && pJsonValue.isNull())
-      return {Result::Error("json value is null")};
+      return tl::make_unexpected(Result::Error("json value is null"));
     if (!pJsonValue.isString())
-      return Result::Result<QUuid>(Result::Error("json value is not a string"));
+      return tl::make_unexpected(Result::Error("json value is not a string"));
 
     const auto qUuid = QUuid(pJsonValue.toString());
 
     if (qUuid.isNull())
-      return Result::Result<QUuid>(Result::Error("value is null"));
+      return tl::make_unexpected(Result::Error("value is null"));
 
     return Result::Result<QUuid>(qUuid);
   };
@@ -228,9 +230,9 @@ public:
   QStringValue(const QJsonValue &pJsonValue,
                const bool isNullAsZeroValue = false) {
     if (!isNullAsZeroValue && pJsonValue.isNull())
-      return {Result::Error("json value is null")};
+      return tl::make_unexpected(Result::Error("json value is null"));
     if (!pJsonValue.isString())
-      return Result::Result<QString>(Result::Error("json value is not a string"));
+      return tl::make_unexpected(Result::Error("json value is not a string"));
 
     return Result::Result<QString>(pJsonValue.toString());
   };
@@ -249,9 +251,9 @@ public:
   boolValue(const QJsonValue &pJsonValue,
             const bool isNullAsZeroValue = false) {
     if (!isNullAsZeroValue && pJsonValue.isNull())
-      return {Result::Error("json value is null")};
+      return tl::make_unexpected(Result::Error("json value is null"));
     if (!pJsonValue.isBool())
-      return new Result::Result<bool>(Result::Error("json value is not a bool"));
+      return tl::make_unexpected(Result::Error("json value is not a bool"));
 
     return pJsonValue.toBool();
     ;
@@ -263,20 +265,20 @@ public:
     Q_UNUSED(pJsonValue)
     switch (pType) {
     case QVariant::Invalid:
-      return Result::Result<QVariant>(Result::Error("prop type is invalid"));
+      return tl::make_unexpected(Result::Error("prop type is invalid"));
       break;
     case QVariant::Bool:
-      return boolValue(pJsonValue, isNullAsZeroValue).toVariant();
+      return boolValue(pJsonValue, isNullAsZeroValue);
     case QVariant::Int:
-      return intValue<int>(pJsonValue, isNullAsZeroValue).toVariant();
+      return intValue<int>(pJsonValue, isNullAsZeroValue);
     case QVariant::UInt:
-      return intValue<uint>(pJsonValue, isNullAsZeroValue).toVariant();
+      return intValue<uint>(pJsonValue, isNullAsZeroValue);
     case QVariant::LongLong:
-      return intValue<qint64>(pJsonValue, isNullAsZeroValue).toVariant();
+      return intValue<qint64>(pJsonValue, isNullAsZeroValue);
     case QVariant::ULongLong:
-      return intValue<quint64>(pJsonValue, isNullAsZeroValue).toVariant();
+      return intValue<quint64>(pJsonValue, isNullAsZeroValue);
     case QVariant::Double:
-      return doubleValue<double>(pJsonValue, isNullAsZeroValue).toVariant();
+      return doubleValue<double>(pJsonValue, isNullAsZeroValue);
       //    case QVariant::Char:
       //      break;
       //    case QVariant::Map:
@@ -284,7 +286,7 @@ public:
       //    case QVariant::List:
       //      break;
     case QVariant::String:
-      return QStringValue(pJsonValue, isNullAsZeroValue).toVariant();
+      return QStringValue(pJsonValue, isNullAsZeroValue);
       //    case QVariant::StringList:
       //      break;
       //    case QVariant::ByteArray:
@@ -292,11 +294,11 @@ public:
       //    case QVariant::BitArray:
       //      break;
     case QVariant::Date:
-      return QDateValue(pJsonValue, isNullAsZeroValue).toVariant();
+      return QDateValue(pJsonValue, isNullAsZeroValue);
       //    case QVariant::Time:
       //      break;
     case QVariant::DateTime:
-      return QDateTimeISOValue(pJsonValue, isNullAsZeroValue).toVariant();
+      return QDateTimeISOValue(pJsonValue, isNullAsZeroValue);
       //    case QVariant::Url:
       //      break;
       //    case QVariant::Locale:
@@ -326,7 +328,7 @@ public:
       //    case QVariant::EasingCurve:
       //      break;
     case QVariant::Uuid:
-      return QUuidValue(pJsonValue, isNullAsZeroValue).toVariant();
+      return QUuidValue(pJsonValue, isNullAsZeroValue);
       //    case QVariant::ModelIndex:
       //      break;
       //    case QVariant::PersistentModelIndex:
@@ -390,15 +392,16 @@ public:
     default: {
       const char *typeName = QMetaType::typeName(static_cast<int>(pType));
       if (typeName && strcmp(typeName, "tl::optional<QString>") == 0) {
-        return QStringValue(pJsonValue).toVariant();
+        return QStringValue(pJsonValue);
       }
       //      int optionalType = qMetaTypeId<tl::optional<QString>>();
 
       //      if (static_cast<int>(pType) == optionalType)
-      //        return QStringValue(pJsonValue).toVariant();
+      //        return QStringValue(pJsonValue);
 
-      return {Result::Error("unsupported prop type: " +
-                          QString::fromLatin1(QVariant::typeToName(pType)))};
+      return tl::make_unexpected(
+          "unsupported prop type: " +
+          QString::fromLatin1(QVariant::typeToName(pType)));
     }
     }
   };

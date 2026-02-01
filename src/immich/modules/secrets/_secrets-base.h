@@ -14,9 +14,10 @@ public:
   BaseSecretsModule(QObject *parent = nullptr) : BaseModule(parent) {}
   virtual ~BaseSecretsModule() = default;
 
-  virtual  Result::Promise<QString> *getAuthToken() = 0;
-  virtual  Result::Promise<bool> *storeAuthToken(const QString &pToken) = 0;
-  virtual  Result::Promise<bool> *deleteAuthToken() = 0;
+  virtual Result::Promise<QString> *getAuthToken() = 0;
+  virtual Result::Promise<bool> *storeAuthToken(const QString &pToken) = 0;
+  virtual Result::Promise<bool> *deleteAuthToken() = 0;
+  virtual Result::Promise<bool> *checkAuthTokenExists() = 0;
 };
 } // namespace Secrets
 } // namespace Module

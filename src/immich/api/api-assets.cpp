@@ -29,8 +29,8 @@ ApiAssets::thumbnail(const QUuid &id,
   loop.exec();
 
   if (rep->error()) {
-    return Result::Result<QByteArray>(Result::Error(rep->errorString()));
+    return tl::make_unexpected(Result::Error(rep->errorString()));
   }
 
-  return Result::Result<QByteArray>(rep->readAll());
+  return {rep->readAll()};
 }

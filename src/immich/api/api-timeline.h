@@ -6,7 +6,7 @@
 #include <QObject>
 #include <QUuid>
 #include <src/result/result.h>
-#include <tl-optional.h>
+#include <src/tl-optional.h>
 
 namespace Immich {
 namespace Api {

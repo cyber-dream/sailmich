@@ -26,17 +26,17 @@ ModAlbum::updateAlbumModel(Model::Album::TimelineAlbumModel *model,
     params.order = Api::Models::AssetOrder::DESC;
     const auto &res = api.timeline->getBuckets(params);
 
-    if (!res.isSucceeded()) {
-      return {Result::Error(res.error())};
+    if (!res.has_value()) {
+      return tl::make_unexpected(res.error());
     }
 
     QVector<Model::Album::TimelineTimeBucketModel *> rows;
-    rows.reserve(res.data().size());
-    for (int idx = 0; idx < res.data().size(); ++idx) {
-      const auto &b = res.data()[idx];
+    rows.reserve(res.value().size());
+    for (int idx = 0; idx < res.value().size(); ++idx) {
+      const auto &b = res.value()[idx];
       if (!b.isValid())
-        return {Result::Error("timebucket [" + QVariant(idx).toString() +
-                              "] is not valid:" + b.errMessage())};
+        return tl::make_unexpected(Result::Error("timebucket [" + QVariant(idx).toString() +
+                              "] is not valid:" + b.errMessage()));
 
       const auto row = new Model::Album::TimelineTimeBucketModel(
           b.timeBucketDate, b.count, model);
@@ -95,7 +95,7 @@ void ModAlbum::processNextTimebucket() {
       QDate(task.model->getDate().first, task.model->getDate().second, 1);
 
   const auto &respBucket = api.timeline->getBucket(qDate, params);
-  if (!respBucket.isSucceeded()) {
+  if (!respBucket.has_value()) {
     qWarning() << respBucket.error().message();
     QMetaObject::invokeMethod(this, "processNextTimebucket",
                               Qt::QueuedConnection);
@@ -104,7 +104,7 @@ void ModAlbum::processNextTimebucket() {
 
   QVector<Model::Album::TimelineDayRow *> newRows;
 
-  const auto bucketData = respBucket.data();
+  const auto bucketData = respBucket.value();
   auto it = bucketData.begin();
   const auto end = bucketData.end();
 
@@ -142,11 +142,7 @@ void ModAlbum::processNextTimebucket() {
 Result::PromiseVariant *
 ModAlbum::q_updateAlbumModel(Model::Album::TimelineAlbumModel *model,
                              const QUuid &albumId) {
-  return new Result::PromiseVariant([this, model, albumId]() {
-    const auto resp = updateAlbumModel(model, albumId);
-    resp->waitForFinished();
-    return resp->getResult().toVariant();
-  });
+  return new Result::PromiseVariant(updateAlbumModel(model, albumId));
 }
 
 Result::Promise<bool> *
@@ -154,12 +150,12 @@ ModAlbum::updateAlbumsListModel(Model::Albums::AlbumsListModel *model) {
   return new Result::Promise<bool>([model]() -> Result::Result<bool> {
     const auto &res = api.albums->getAlbums();
 
-    if (!res.isSucceeded())
-      return {Result::Error(res.error())};
+    if (!res.has_value())
+      return tl::make_unexpected(Result::Error(res.error()));
 
     QVector<Model::Albums::AlbumInfo> albums;
-    albums.reserve(res.data().size());
-    for (const auto &a : res.data()) {
+    albums.reserve(res.value().size());
+    for (const auto &a : res.value()) {
       albums.append(Model::Albums::AlbumInfo(a));
     }
 
@@ -170,9 +166,5 @@ ModAlbum::updateAlbumsListModel(Model::Albums::AlbumsListModel *model) {
 
 Result::PromiseVariant *
 ModAlbum::q_updateAlbumsListModel(Model::Albums::AlbumsListModel *model) {
-  return new Result::PromiseVariant([this, model]() {
-    const auto resp = updateAlbumsListModel(model);
-    resp->waitForFinished();
-    return resp->getResult().toVariant();
-  });
+  return new Result::PromiseVariant(updateAlbumsListModel(model));
 }

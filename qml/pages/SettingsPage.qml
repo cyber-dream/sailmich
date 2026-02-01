@@ -9,10 +9,14 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: "Logout"
+                //% "Logout"
+                //: Logout pulley menu item
+                text:  qsTrId("settingsPage.pulleyLogout")
                 onClicked: {
                     Immich.auth.q_logout()
-                    pageStack.replace(Qt.resolvedUrl("InitPage.qml"))
+                    //                    pageStack.clear()
+                    //                    pageStack.replace(Qt.resolvedUrl("AuthPage.qml"), Qt.resolvedUrl("AuthDialog.qml"))
+                    window.openAuthDialog()
                 }
             }
         }
@@ -22,16 +26,19 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: "Settings"
+                //% "Settings"
+                //: Settings page title
+                title: qsTrId("settingsPage.titleSettings")
             }
 
-//            IconButton {
-//                icon.source: "../icons/icon-m-bug.png"
-//                             + (pressed ? Theme.highlightColor : Theme.primaryColor)
-//                onClicked: pageStack.push(Qt.resolvedUrl("DebugPage.qml"))
-//            }
-
-            InfoLabel{text: "Use pulley menu to logout"}
+            //            IconButton {
+            //                icon.source: "../icons/icon-m-bug.png"
+            //                             + (pressed ? Theme.highlightColor : Theme.primaryColor)
+            //                onClicked: pageStack.push(Qt.resolvedUrl("DebugPage.qml"))
+            //            }
+            InfoLabel {
+                text: "Use pulley menu to logout"
+            }
         }
 
         VerticalScrollDecorator {}

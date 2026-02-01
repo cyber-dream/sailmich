@@ -21,18 +21,18 @@ AuthenticationApi::validateToken() const {
   loop.exec();
 
   if (rep->error())
-    return {Result::Error(rep->errorString())};
+    return tl::make_unexpected(Result::Error(rep->errorString()));
 
   QByteArray ReplyText = rep->readAll();
   QJsonDocument doc = QJsonDocument::fromJson(ReplyText);
   if (!doc.isObject())
-    return {Result::Error("json is not an object")};
+    return tl::make_unexpected(Result::Error("json is not an object"));
 
   const auto validateTokenResponse =
       Authentication::ValidateTokenResponse(doc.object());
   if (!validateTokenResponse.isValid())
-    return {Result::Error("validateTokenResponse is not valid:" +
-                        validateTokenResponse.errMessage())};
+    return tl::make_unexpected(Result::Error("validateTokenResponse is not valid:" +
+                        validateTokenResponse.errMessage()));
 
   return {validateTokenResponse};
 }
@@ -61,17 +61,17 @@ AuthenticationApi::login(const QUrl &pAddress, const QString &pEmail,
   loop.exec();
 
   if (rep->error())
-    return {Result::Error(rep->errorString())};
+    return tl::make_unexpected(Result::Error(rep->errorString()));
 
   QByteArray ReplyText = rep->readAll();
   QJsonDocument doc = QJsonDocument::fromJson(ReplyText);
   if (!doc.isObject())
-    return {Result::Error("json is not an object")};
+    return tl::make_unexpected(Result::Error("json is not an object"));
 
   const auto loginResponse = LoginResponse(doc.object());
   if (!loginResponse.isValid())
-    return {Result::Error("loginResponse is not valid: " +
-                        loginResponse.errMessage())};
+    return tl::make_unexpected(Result::Error("loginResponse is not valid: " +
+                        loginResponse.errMessage()));
 
   return {loginResponse};
 }
@@ -86,17 +86,17 @@ Result::Result<LogoutResponse> AuthenticationApi::logout() const {
   loop.exec();
 
   if (rep->error())
-    return {Result::Error(rep->errorString())};
+    return tl::make_unexpected(Result::Error(rep->errorString()));
 
   QByteArray ReplyText = rep->readAll();
   QJsonDocument doc = QJsonDocument::fromJson(ReplyText);
   if (!doc.isObject())
-    return {Result::Error("json is not an object")};
+    return tl::make_unexpected(Result::Error("json is not an object"));
 
   const auto logoutResponse = Authentication::LogoutResponse(doc.object());
   if (logoutResponse.isValid()) {
-    return {Result::Error("logoutResponse is not valid:" +
-                        logoutResponse.errMessage())};
+    return tl::make_unexpected(Result::Error("logoutResponse is not valid:" +
+                        logoutResponse.errMessage()));
   }
 
   return {logoutResponse};

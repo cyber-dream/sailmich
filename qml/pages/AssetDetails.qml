@@ -13,82 +13,117 @@ Page {
             spacing: Theme.paddingSmall
 
             PageHeader {
-                title: "About"
+                //% "About"
+                //: Title of page
+                title: qsTrId("assetDetailsPage.titleAbout")
             }
 
             DetailItem {
-                label: "Asset Id"
+                //% "Asset ID"
+                //: Uuid of Immich asset
+                label: qsTrId("common.assetId")
                 value: assetData.assetId.toString().replace(/{|}/g,"").toLowerCase()
             }
 
             DetailItem {
-                label: "Created"
+                //% "Created at"
+                //: Date of asset creation
+                label: qsTrId("common.createdAt")
                 value: assetData.fileCreatedAt
             }
 
             DetailItem {
-                label: "ownerId"
+                //% "Owner Id"
+                //: Uuid of owner account
+                label: qsTrId("common.ownerId")
                 value: assetData.ownerId.toString().replace(/{|}/g,"").toLowerCase()
             }
 
             DetailItem {
-                label: "city"
+                //% "City"
+                //: City where photo created
+                label: qsTrId("common.city")
                 value: assetData.city
             }
             DetailItem {
-                label: "country"
+                //% "Country"
+                //: Country where photo created
+                label: qsTrId("common.country")
                 value: assetData.country
             }
             DetailItem {
-                label: "livePhotoVideoId"
+                //% "Live Id"
+                //: Uuid of live photo/video asset
+                label: qsTrId("common.livePhotoVideoId")
                 value: assetData.livePhotoVideoId
             }
             DetailItem {
-                label: "projectionType"
+                //% "Projection Type"
+                //: Type of asset projection (plain or 360)
+                label: qsTrId("common.projectionType")
                 value: assetData.projectionType
             }
             DetailItem {
-                label: "thumbhash"
+                //% "Thumbhash"
+                //: Bytecoded preview of asset
+                label: qsTrId("common.thumbhash")
                 value: assetData.thumbhash
             }
             DetailItem {
-                label: "stack"
+                //% "Stack"
+                //: Information about assets stack (union of similar photos)
+                label: qsTrId("common.stack")
                 value: assetData.stack
             }
             DetailItem {
-                label: "duration"
+                //% "Duration"
+                //: Duration of asset
+                label: qsTrId("common.duration")
                 value: assetData.duration
             }
             DetailItem {
-                label: "isFavorite"
+                //% "Is Favourite"
+                //: Favourite or not bool flag
+                label: qsTrId("common.isFavorite")
                 value: assetData.isFavorite
             }
+//            DetailItem {
+                //TODO type enum in app src
+//                    text: "isImage"
+//                value: assetData.isImage
+//            }
             DetailItem {
-                label: "isImage"
-                value: assetData.isImage
-            }
-            DetailItem {
-                label: "isTrashed"
+                //% "Is Trashed"
+                //: Is this asset trashed bool flag
+                label: qsTrId("common.isTrashed")
                 value: assetData.isTrashed
             }
+//            DetailItem { //TODO WTF???
+//                label: "ratio"
+//                value: assetData.ratio
+//            }
             DetailItem {
-                label: "ratio"
-                value: assetData.ratio
-            }
-            DetailItem {
-                label: "localOffsetHours"
+                //% "Local offset"
+                //: Time Zone Offset from UTC+0 in hours
+                label: qsTrId("common.localOffsetHours")
                 value: assetData.localOffsetHours
             }
             DetailItem {
-                label: "latitude"
+                //% "Latitude"
+                //: -
+                label: qsTrId("common.latitude")
                 value: assetData.latitude
             }
             DetailItem {
-                label: "longitude"
+                //% "Longitude"
+                //: -
+                label: qsTrId("common.longitude")
                 value: assetData.longitude
             }
             DetailItem {
-                label: "visibility"
+                //% "Visibility"
+                //: Visibilty of asset (archive, timeline, hidden, locked)
+                label: qsTrId("common.assetVisibility")
                 value: assetData.visibility
             }
         }

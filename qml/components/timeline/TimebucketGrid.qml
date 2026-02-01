@@ -38,46 +38,28 @@ SilicaListView {
 
             height: Math.ceil(count / 5) * cellHeight //TODO to property
 
-            delegate: Loader {
-                sourceComponent: thumbnailPath ? imageThumbnail : loadRect
+            delegate: BackgroundItem {
+                id: backItem
+                width: gridView.cellWidth
+                height: gridView.cellHeight
 
-                Component {
-                    id: imageThumbnail
-                    Thumbnail {
-                        id: thumb
-                        width: gridView.cellWidth
-                        height: gridView.cellHeight
-
-                        imageSource: thumbnailPath
-                        loadingAnimOpacity: loadingAnim.globalLoadingAnimOpacity
-
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                openMediaViewer(timeBucketDate,
-                                                dayRowIndex, index)
-                            }
-                        }
-                    }
+                onClicked: {
+                    openMediaViewer(timeBucketDate, dayRowIndex, index)
                 }
 
-                Component {
-                    id: loadRect
-                    Rectangle {
-                        width: gridView.cellWidth
-                        height: gridView.cellHeight
-                        color: Theme.secondaryHighlightColor
-                        opacity: loadingAnimOpacity
+                Thumbnail {
+                    anchors.fill: parent
+                    imageSource: thumbnailPath
+                    loadingAnimOpacity: loadingAnim.globalLoadingAnimOpacity
+                }
 
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                //                                console.log(dayRowIndex)
-                                openMediaViewer(timeBucketDate,
-                                                dayRowIndex, index)
-                            }
-                        }
-                    }
+                Rectangle {
+                    id: overlay
+                    anchors.fill: parent
+                    color: Theme.highlightBackgroundColor
+                    opacity: backItem.pressed ? 0.5 : 0
+
+                    //Behavior on opacity { NumberAnimation { duration: 100 } }
                 }
             }
         }

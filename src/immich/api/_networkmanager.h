@@ -17,7 +17,7 @@ public:
   void setHeader(QNetworkRequest::KnownHeaders header, const QVariant &value);
 
   QNetworkRequest getQRequest();
-  void setAuthToken(const QByteArray &token);
+  void setAuthToken(const QByteArray &token); //TODO inline
   QTimer *getTimer();
   int timeout = 30000;
 

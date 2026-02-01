@@ -28,6 +28,7 @@ public:
    Result::Promise<QString> *getAuthToken() override;
    Result::Promise<bool> *storeAuthToken(const QString &pToken) override;
    Result::Promise<bool> *deleteAuthToken() override;
+   Result::Promise<bool> * checkAuthTokenExists() override;
 
 signals:
 protected:

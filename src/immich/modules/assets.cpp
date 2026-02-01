@@ -78,7 +78,7 @@ void ModAssets::processNextThumbnail() {
   params.size = task.size;
   const auto &apiResult = api.assets->thumbnail(task.assetId, params);
 
-  if (!apiResult.isSucceeded()) {
+  if (!apiResult.has_value()) {
     QMetaObject::invokeMethod(this, "processNextThumbnail",
                               Qt::QueuedConnection);
     qWarning() << "error in thumbnail download:" << apiResult.error().message();
@@ -98,7 +98,7 @@ void ModAssets::processNextThumbnail() {
     return;
   }
 
-  file.write(apiResult.data());
+  file.write(apiResult.value());
   file.close();
 
   QMetaObject::invokeMethod(this, "processNextThumbnail", Qt::QueuedConnection);

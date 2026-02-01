@@ -27,13 +27,13 @@ ApiAlbums::getAlbums(bool isShared, const QUuid &assetId) const {
   loop.exec();
 
   if (rep->error()) {
-    return {Result::Error(rep->errorString())};
+    return tl::make_unexpected(Result::Error(rep->errorString()));
   }
 
   QByteArray ReplyText = rep->readAll();
   QJsonDocument doc = QJsonDocument::fromJson(ReplyText);
   if (!doc.isArray())
-    return {Result::Error("json is not an array")};
+    return tl::make_unexpected(Result::Error("json is not an array"));
 
   const auto arr = doc.array();
   QVector<AlbumResponseDto> albums;

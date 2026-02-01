@@ -12,7 +12,7 @@
 #include <QUuid>
 #include <QVector>
 #include <cstring>
-#include <tl-optional.h>
+#include <src/tl-optional.h>
 
 Q_DECLARE_METATYPE(tl::optional<QString>)
 
@@ -57,13 +57,14 @@ public:
       if (jsonObject.contains(jsonKey)) {
         const auto result =
             JsonValueParser::prop(jsonObject[jsonKey], prop.type());
-        if (!result.isSucceeded()) {
+
+        if (!result.has_value()) {
           obj.m_errMessage =
               QString("Field '%1': %2").arg(jsonKey, result.error().message());
           return obj;
         }
 
-        if (!prop.writeOnGadget(&obj, result.data())) {
+        if (!prop.writeOnGadget(&obj, result.value())) {
           obj.m_errMessage = "failed to write field: " + jsonKey;
           return obj;
         }
@@ -108,13 +109,13 @@ public:
         const auto result = JsonValueParser::prop(
             jsonObject[jsonKey].toArray()[pIdx], prop.type());
 
-        if (!result.isSucceeded()) {
+        if (!result.has_value()) {
           obj.m_errMessage =
               QString("Field '%1': %2").arg(jsonKey, result.error().message());
           return obj;
         }
 
-        if (!prop.writeOnGadget(&obj, result.data())) {
+        if (!prop.writeOnGadget(&obj, result.value())) {
           obj.m_errMessage = "failed to write field: " + jsonKey;
           return obj;
         }

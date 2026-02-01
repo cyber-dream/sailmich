@@ -51,6 +51,8 @@ ImmichPlugin::ImmichPlugin(QObject *parent) : QObject(parent) {
 
   mod_auth = new Module::Auth::Auth(this);
   mod_ping = new Module::Ping::Ping(this);
+  mod_album = new Module::Album::ModAlbum(this);
+  mod_assets = new Module::Assets::ModAssets(this);
 
   connect(mod_auth, &Module::Auth::Auth::loginFinished, this,
           &ImmichPlugin::slotOnLoginFinished);
@@ -66,10 +68,15 @@ ImmichPlugin::ImmichPlugin(QObject *parent) : QObject(parent) {
 };
 
 void ImmichPlugin::registerTypes(const char *uri) {
-  Q_UNUSED(uri)
+  /*                Result                   */
+
   qmlRegisterUncreatableType<Result::PromiseVariant>(
       uri, 1, 0, "PromiseVariant", "Created in C++ only");
   qRegisterMetaType<Result::PromiseVariant *>("PromiseVariant*");
+
+  //  qmlRegisterUncreatableType<Result::Result<QVariant>>(
+  //      uri, 1, 0, "ResultVariant", "Created in c++ only");
+  //  qRegisterMetaType<Result::Result<QVariant>>("ResultVariant*");
 
   qRegisterMetaType<Result::Error>("Error");
 
@@ -160,67 +167,70 @@ void ImmichPlugin::registerTypes(const char *uri) {
 
   QMetaType::registerConverter<tl::optional<QString>, QString>(
       [](const tl::optional<QString> &opt) { return opt.value_or(""); });
+
+  //  qmlRegisterType<Result::PromiseBase>(uri, 1, 0, "ResultPromise");
 }
 
 void ImmichPlugin::startInit() {
   const auto res = new Result::Promise<ImmichPlugin::InitStatus>(
       [this]() -> Result::Result<ImmichPlugin::InitStatus> {
-//        m_initStatus = InitStatusStarted;
+        m_initStatus = InitStatusStarted;
 
-//        const auto baseUrl = getBaseUrl();
-//        if (baseUrl.isEmpty()) {
-//          qInfo() << "baseUrl empty";
-//          return {InitStatusBaseUrlNotFound};
-//        }
+        const auto baseUrl = getBaseUrl();
+        if (baseUrl.isEmpty()) {
+          qInfo() << "baseUrl empty";
+          return {InitStatusBaseUrlNotFound};
+        }
 
-//        Api::Base::setApiUrl(baseUrl.resolved(QUrl("api/")));
+        Api::Base::setApiUrl(baseUrl.resolved(QUrl("api/")));
 
-//        auto resultAuthToken = m_secrets->getAuthToken();
-//        resultAuthToken->waitForFinished();
-//        if (!resultAuthToken->getResult().isSucceeded()) {
-//          qWarning() << "can't get auth token:"
-//                     << resultAuthToken->getResult().error().message();
-//          return {InitStatusAuthTokenNotFound};
-//        }
+        auto resultAuthToken = m_secrets->getAuthToken();
+        resultAuthToken->waitForFinished();
+        if (!resultAuthToken->getResult().has_value()) {
+          qWarning() << "can't get auth token:"
+                     << resultAuthToken->getResult().error().message();
+          return {InitStatusAuthTokenNotFound};
+        }
 
-//        Api::Base::setAuthToken(resultAuthToken->getResult().data());
+        Api::Base::setAuthToken(resultAuthToken->getResult().value());
 
-//        const auto resPing = mod_ping->ping();
-//        resPing->waitForFinished();
-//        if (!resPing->getResult().isSucceeded()) {
-//          qWarning() << "ping api host failed:"
-//                     << resPing->getResult().error().message();
-//          return {InitStatusApiPingFailed};
-//        }
+        const auto resPing = mod_ping->ping();
+        resPing->waitForFinished();
+        if (!resPing->getResult().has_value()) {
+          qWarning() << "ping api host failed:"
+                     << resPing->getResult().error().message();
+          return {InitStatusApiPingFailed};
+        }
 
-//        const auto reqObj = mod_auth->validateToken();
-//        reqObj->waitForFinished();
-//        if (!reqObj->getResult().isSucceeded()) {
-//          qWarning() << "token invalid:"
-//                     << reqObj->getResult().error().message();
-//          return {InitStatusTokenInvalid};
-//        }
+        const auto reqObj = mod_auth->validateToken();
+        reqObj->waitForFinished();
+        if (!reqObj->getResult().has_value()) {
+          qWarning() << "token invalid:"
+                     << reqObj->getResult().error().message();
+          return {InitStatusTokenInvalid};
+        }
 
-//        if (!reqObj->getResult().data()) { // TODO delete bad token
-//          qWarning() << "token invalid:"
-//                     << reqObj->getResult().error().message();
-//          return {InitStatusTokenInvalid};
-//        }
+        if (!reqObj->getResult().value()) { // TODO delete bad token
+          qWarning() << "token invalid:"
+                     << reqObj->getResult().error().message();
+          return {InitStatusTokenInvalid};
+        }
 
-//        qInfo() << "token valid";
+        qInfo() << "token valid";
         return {InitStatusComplete};
       });
 
   connect(res, &Result::PromiseBase::finished, [this, res]() {
-    if (!res->getResult().isSucceeded()) {
+    if (!res->getResult().has_value()) {
       qDebug() << "error in intialization"
                << res->getResult().error().message();
       return;
     }
 
-    this->m_initStatus = res->getResult().data();
+    this->m_initStatus = res->getResult().value();
     emit initStatusChanged();
-//    res->deleteLater();
+    emit isInitFinishedChanged();
+    //    res->deleteLater();
   });
 }
 
@@ -266,19 +276,26 @@ QObject *ImmichPlugin::assetsSingletonProvider(QQmlEngine *, QJSEngine *) {
 void ImmichPlugin::slotOnLoginFinished(
     const Result::Result<Module::Auth::LoginResponse> &response) {
 
-  if (!response.isSucceeded()) {
+  if (!response.has_value()) {
     qWarning() << "login error";
     return;
   }
 
   m_settings->beginGroup("Auth");
-  m_settings->setValue("base_url", response.data().baseUrl.toString());
+  m_settings->setValue("base_url", response.value().baseUrl.toString());
   m_settings->endGroup();
   m_settings->sync();
 
-  m_secrets->storeAuthToken(response.data().accessToken);
-  Api::Base::setAuthToken(response.data().accessToken);
-  Api::Base::setApiUrl(response.data().apiUrl());
+  const auto storeTokenResult =
+      m_secrets->storeAuthToken(response.value().accessToken);
+  storeTokenResult->waitForFinished();
+
+  if (!storeTokenResult->getResult().has_value()) {
+    qWarning() << "can't save token:"
+               << storeTokenResult->getResult().error().message();
+  }
+  Api::Base::setAuthToken(response.value().accessToken);
+  Api::Base::setApiUrl(response.value().apiUrl());
 }
 
 void ImmichPlugin::slotOnLogoutFinished(

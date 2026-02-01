@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
+//TODO no anim on loader change
 Loader {
     id: loader
     property var imageSource
@@ -21,6 +22,8 @@ Loader {
             sourceSize.width: cellSize
             sourceSize.height: cellSize
             fillMode: Image.PreserveAspectCrop
+
+            opacity: imageSource ? 1.0 : 0.0
         }
     }
 
@@ -36,6 +39,11 @@ Loader {
                 anchors.centerIn: parent
                 source: "image://theme/icon-m-image"
                 visible: isImageIconOnLoading
+            }
+
+            Component.onCompleted: opacity = 1.0
+            Behavior on opacity {
+                FadeAnimation {}
             }
         }
     }

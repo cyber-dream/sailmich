@@ -37,6 +37,7 @@ class ImmichPlugin : public QObject {
   Q_PROPERTY(Immich::Module::Auth::Auth *auth READ getAuth() CONSTANT)
   Q_PROPERTY(Immich::Module::Album::ModAlbum *album READ getAlbum() CONSTANT)
   Q_PROPERTY(InitStatus initStatus READ getInitStatus NOTIFY initStatusChanged)
+    Q_PROPERTY(bool isInitFinished READ getIsInitFinished NOTIFY isInitFinishedChanged)
 public:
   explicit ImmichPlugin(QObject *parent = nullptr);
 
@@ -63,8 +64,10 @@ public:
   static QObject *assetsSingletonProvider(QQmlEngine *, QJSEngine *);
 
   InitStatus getInitStatus() const { return m_initStatus; }
+  bool getIsInitFinished() const {return m_initStatus != InitStatusNotStarted;}
 signals:
   void initStatusChanged();
+  void isInitFinishedChanged();
 public slots:
   void slotOnLoginFinished(
       const Result::Result<Module::Auth::LoginResponse> &response);
@@ -83,9 +86,9 @@ private:
   Module::Assets::ModAssets *mod_assets = nullptr;
   Module::Auth::Auth *mod_auth = nullptr;
   Module::Ping::Ping *mod_ping = nullptr;
+  Module::Secrets::BaseSecretsModule *m_secrets = nullptr;
 
-  Module::Secrets::BaseSecretsModule *m_secrets;
-  InitStatus m_initStatus = InitStatus::InitStatusNotStarted;
+  InitStatus m_initStatus;
 };
 } // namespace Immich
 

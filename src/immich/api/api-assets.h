@@ -3,12 +3,9 @@
 
 #include "_base-api.h"
 #include "dto/_dto.h"
-#include <tl-optional.h>
-//#include <src/result/result.h>
+#include <src/tl-optional.h>
+#include <src/result/result.h>
 
-namespace Result {
-template <typename T> class Result;
-}
 namespace Immich {
 namespace Api {
 namespace Assets {

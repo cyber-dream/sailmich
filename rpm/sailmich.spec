@@ -1,9 +1,9 @@
 Name:       sailmich
 
-Summary:    First release
-Version:    0.1
+Summary:    New auth & cosmetic update
+Version:    0.2
 Release:    1
-License:    LICENSE
+License:    GPL-3.0
 URL:        https://forum.sailfishos.org/t/native-immich-client/26075
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   sailfishsilica-qt5 >= 0.10.9

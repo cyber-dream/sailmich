@@ -11,7 +11,7 @@ Result::Result<QVector<TimeBucketAsset>>
 ApiTimeline::getBucket(const QDate &pDate,
                        const GetBucketQueryParam &params) const {
   if (!pDate.isValid())
-    return {Result::Error("date parameter is invalid")};
+    return tl::make_unexpected(Result::Error("date parameter is invalid"));
   QUrlQuery query;
   query.addQueryItem("timeBucket", pDate.toString("yyyy-MM-dd"));
   if (params.albumId.has_value())
@@ -67,17 +67,17 @@ ApiTimeline::getBucket(const QDate &pDate,
   loop.exec();
 
   if (rep->error())
-    return {Result::Error(rep->errorString())};
+    return tl::make_unexpected(Result::Error(rep->errorString()));
 
   QByteArray ReplyText = rep->readAll();
   QJsonDocument doc = QJsonDocument::fromJson(ReplyText);
   if (!doc.isObject())
-    return {Result::Error("json is not an object")};
+    return tl::make_unexpected(Result::Error("json is not an object"));
 
   const auto obj = doc.object();
 
   if (!obj["id"].isArray())
-    return {Result::Error("malformed json object")};
+    return tl::make_unexpected(Result::Error("malformed json object"));
 
   const int bucketSize = obj["id"].toArray().size();
 
@@ -86,9 +86,9 @@ ApiTimeline::getBucket(const QDate &pDate,
   for (int idx = 0; idx < bucketSize; ++idx) {
     assets[idx] = TimeBucketAsset(obj, idx);
     if (!assets[idx].isValid())
-      return {Result::Error("can't parse timebucket [" +
+      return tl::make_unexpected(Result::Error("can't parse timebucket [" +
                           QVariant(idx).toString() +
-                          "]: " + assets[idx].errMessage())};
+                          "]: " + assets[idx].errMessage()));
   }
 
   return Result::Result<QVector<TimeBucketAsset>>(assets);
@@ -152,28 +152,28 @@ ApiTimeline::getBuckets(const GetBucketsQueryParam &params) const {
   loop.exec();
 
   if (rep->error())
-    return {Result::Error(rep->errorString())};
+    return tl::make_unexpected(Result::Error(rep->errorString()));
 
   QByteArray ReplyText = rep->readAll();
 
   QJsonDocument doc = QJsonDocument::fromJson(ReplyText);
   if (!doc.isArray())
-    return {Result::Error("json is not an array")};
+    return tl::make_unexpected(Result::Error("json is not an array"));
 
   QJsonArray array = doc.array();
   QVector<TimeBucketsResponse> resp(array.size());
 
   for (int idx = 0; idx < array.size(); ++idx) {
     if (!array[idx].isObject())
-      return {Result::Error("can't parse timelineBuckets, [" +
-                          QVariant(idx).toString() + "] is not an jsonObject")};
+      return tl::make_unexpected(Result::Error("can't parse timelineBuckets, [" +
+                          QVariant(idx).toString() + "] is not an jsonObject"));
 
     resp[idx] = TimeBucketsResponse(array[idx].toObject());
 
     if (!resp[idx].isValid())
-      return {Result::Error("can't parse timelineBuckets, [" +
+      return tl::make_unexpected(Result::Error("can't parse timelineBuckets, [" +
                           QVariant(idx).toString() +
-                          "] is not a valid: " + resp[idx].errMessage())};
+                          "] is not a valid: " + resp[idx].errMessage()));
   }
 
   return {resp};

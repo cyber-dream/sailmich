@@ -50,7 +50,8 @@ HEADERS += \
     src/utils/bool-str.h \
     src/utils/uuid-str.h \
     src/utils/work-queue.h \
-    tl-optional.h
+    src/tl-expected.h \
+    src/tl-optional.h
 
 SOURCES += src/sailmich.cpp \
     src/immich/api/_base-api.cpp \
@@ -77,8 +78,9 @@ SOURCES += src/sailmich.cpp \
     src/logger.cpp
 
 DISTFILES += qml/sailmich.qml \
+    qml/components/AlbumsFeaturing.qml \
     qml/components/GalleryOverlay.qml \
-    qml/components/MediaViewer.qml \
+    qml/components/mediaviewer/MediaViewer.qml \
     qml/components/Thumbnail.qml \
     qml/components/ThumbnailPulsator.qml \
     qml/components/timeline/TimebucketGrid.qml \
@@ -91,6 +93,7 @@ DISTFILES += qml/sailmich.qml \
     qml/pages/AlbumsPage.qml \
     qml/pages/AssetDetails.qml \
     qml/pages/AuthDialog.qml \
+    qml/pages/AuthPage.qml \
     qml/pages/DebugPage.qml \
     qml/pages/InitPage.qml \
     qml/pages/MainPage.qml \
@@ -98,7 +101,7 @@ DISTFILES += qml/sailmich.qml \
     qml/components/MainPageButton.qml \
     qml/components/timeline/Timeline.qml \
     \
-rpm/sailmich.changes.in \
+    rpm/sailmich.changes \
     rpm/sailmich.changes.run.in \
     rpm/sailmich.spec \
     translations/*.ts \
@@ -106,12 +109,14 @@ rpm/sailmich.changes.in \
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
-# to disable building translations every time, comment out the
-# following CONFIG line
-CONFIG += sailfishapp_i18n
 
-# German translation is enabled as an example. If you aren't
-# planning to localize your app, remember to comment out the
-# following TRANSLATIONS line. And also do not forget to
-# modify the localized app name in the the .desktop file.
+
+
+CONFIG += sailfishapp_i18n
+CONFIG += sailfishapp_i18n_idbased
+SAILFISHAPP_LRELEASE = lrelease -idbased
+#LRELEASE_OPTIONS = -idbased
+#SAILFISHAPP_LRELEASE_OPTIONS = -idbased
+
 TRANSLATIONS += translations/sailmich-en_US.ts
+

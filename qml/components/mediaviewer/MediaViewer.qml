@@ -12,31 +12,47 @@ FullscreenContentPage {
         currentIndex: model.currentGlobalIndex
         anchors.fill: parent
 
-        delegate: MouseArea {
+        delegate: Item {
             width: PathView.view.width
             height: PathView.view.height
 
             readonly property var assetDataObject: model.assetDataObject
-
-            onClicked: overlay.active = !overlay.active
 
             Loader {
                 anchors.fill: parent
                 sourceComponent: previewPath ? img : busyInd
                 Component {
                     id: img
-                    Image {
-                        anchors.fill: parent
-                        source: previewPath
-                        fillMode: Image.PreserveAspectFit
-//                        Label {
-//                            anchors.bottom: parent.bottom
-//                            anchors.horizontalCenter: parent.horizontalCenter
-//                            anchors.bottomMargin: Theme.paddingLarge
-//                            text: index
-//                        }
+                    ZoomableFlickable {
+                        id: zoomFlick
+                        maximumZoom: 10 // TODO calculate
+
+                        onZoomedChanged:  {
+                            overlay.active = !zoomed
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            propagateComposedEvents: true
+
+                            onClicked: {
+                                if (zoomFlick.zoomed)
+                                    zoomFlick.zoomOut()
+
+                                overlay.active = !overlay.active
+
+                                mouse.accepted = false // pass click to zoomFlick
+                            }
+                        }
+
+                        Image {
+                            anchors.fill: parent
+                            source: previewPath
+                            fillMode: Image.PreserveAspectFit
+                        }
                     }
                 }
+
                 Component {
                     id: busyInd
                     Item {
@@ -82,7 +98,7 @@ FullscreenContentPage {
             }
             icon.source: "image://theme/icon-m-about"
             onClicked: pageStack.push(Qt.resolvedUrl(
-                                          "../pages/AssetDetails.qml"), {
+                                          "../../pages/AssetDetails.qml"), {
                                           "assetData": slideShow.currentItem.assetDataObject
                                       })
         }

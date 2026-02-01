@@ -8,7 +8,7 @@
 #include <QUuid>
 #include <QVariant>
 #include <QVector>
-#include <tl-optional.h>
+#include <src/tl-optional.h>
 
 namespace Immich {
 namespace Api {

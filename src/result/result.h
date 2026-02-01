@@ -8,26 +8,12 @@
 #include <QtConcurrent/QtConcurrent>
 #include <atomic>
 #include <functional>
-// TODO move to main namespace
+#include <src/tl-expected.h>
+
 namespace Result {
-
-class PromiseBase : public QObject {
-  Q_OBJECT
-public:
-  //  enum ResultCode { Failed = 0, Succeced = 1 };
-  //  Q_ENUM(ResultCode);
-
-  explicit PromiseBase(QObject *parent = nullptr) : QObject(parent) {}
-
-protected:
-  std::atomic<bool> m_isFinished;
-signals:
-  void finished();
-};
-
 struct Error {
   Q_GADGET
-  Q_PROPERTY(QString m_message MEMBER m_message)
+  Q_PROPERTY(QString message MEMBER m_message)
 public:
   explicit Error() : m_message("empty error") {};
   Error(const QString &err) : m_message(err) {};
@@ -38,186 +24,73 @@ private:
   QString m_message;
 };
 
-template <typename T> class Result {
-public:
-  //  Result()
-  //      : m_status(StatusFailed),
-  //        m_error("result was created as empty object without real error or
-  //        data") {};
-  Result(const T &pData) : m_status(StatusSucceed), m_data(T(pData)) {};
+template <typename T> using Result = tl::expected<T, Error>;
 
-  Result(const Error &pErr) : m_status(StatusFailed), m_error(Error(pErr)) {};
-
-  Result &operator=(const Result &other) {
-    if (this == &other)
-      return *this;
-    this->~Result();
-
-    new (this) Result(other);
-    return *this;
-  }
-
-  Result(const Result &other) : m_status(other.m_status) {
-    switch (m_status) {
-    case Result::Result::StatusFailed:
-      new (&m_error) Error(other.m_error);
-      break;
-    case Result::Result::StatusSucceed:
-      new (&m_data) T(other.m_data);
-      break;
-    }
-  }
-
-  Result(Result &&other) : m_status(other.m_status) {
-    switch (m_status) {
-    case Result::Result::StatusFailed:
-      new (&m_error) Error(std::move(other.m_error));
-      break;
-    case Result::Result::StatusSucceed:
-      new (&m_data) T(std::move(other.m_data));
-      break;
-    }
-  }
-
-  ~Result() {
-    switch (m_status) {
-    case Result::Result::StatusFailed:
-      m_error.~Error();
-      break;
-    case Result::Result::StatusSucceed:
-      m_data.~T();
-      break;
-    }
-  }
-
-  Error error() const {
-    Q_ASSERT(m_status == Result::Result::StatusFailed);
-    return m_error;
-  };
-
-  T data() const {
-    Q_ASSERT(m_status == Result::Result::StatusSucceed);
-    return m_data;
-  };
-
-  bool isSucceeded() const {
-    return m_status == Result::Result::StatusSucceed ? true : false;
-  };
-
-  Result<QVariant> toVariant() const {
-    switch (m_status) {
-    case Result::Result::StatusFailed:
-      return Result<QVariant>(m_error);
-    case Result::Result::StatusSucceed:
-      return Result<QVariant>(QVariant::fromValue(m_data));
-    default:
-      qCritical() << "returning empty qWariant result";
-      return Result<QVariant>(QVariant());
-    }
-  }
-
-private:
-  enum Status { StatusFailed, StatusSucceed };
-  Status m_status;
-  union {
-    T m_data;
-    Error m_error;
-  };
-};
-
-class PromiseVariant : public PromiseBase {
+class PromiseBase : public QObject {
   Q_OBJECT
 public:
-  explicit PromiseVariant(std::function<Result<QVariant>()> work,
-                          QObject *parent = nullptr)
-      : PromiseBase(parent), m_result(Error("result is empty stub")) {
-    this->finish(work());
-  };
+  explicit PromiseBase(QObject *parent = nullptr)
+      : QObject(parent), m_isFinished(false) {}
 
   Q_INVOKABLE void waitForFinished() const {
+    if (m_isFinished.load(std::memory_order_acquire))
+      return;
+
     QEventLoop loop;
-    QObject::connect(this, &PromiseVariant::finished, &loop, &QEventLoop::quit);
+    QObject::connect(this, &PromiseBase::finished, &loop, &QEventLoop::quit,
+                     Qt::QueuedConnection);
+
     loop.exec();
   };
 
-  bool getIsFinished() { return m_isFinished; }
-
-  QVariant getData() {
-    Q_ASSERT(m_isFinished);
-
-    return m_result.data();
+  bool getIsFinished() const {
+    return m_isFinished.load(std::memory_order_acquire);
   }
 
-  QVariant getDataVariant() { return QVariant(getData()); }
+  virtual tl::expected<QVariant, Error> getVariantResult() const = 0;
 
-  Error getError() {
-    Q_ASSERT(m_isFinished);
-
-    return m_result.error();
-  }
+protected:
+  std::atomic<bool> m_isFinished;
 signals:
   void finished();
-  void finishedError(Error);
-  void finishedSuccess(QVariant);
-
-private:
-  void finish(const Result<QVariant> &result) {
-    QTimer::singleShot(0, this, [this, result]() {
-      m_result = result;
-      m_isFinished = true;
-      emit finished();
-      if (result.isSucceeded()) {
-        emit finishedSuccess(m_result.data());
-      } else {
-        emit finishedError(m_result.error());
-      }
-    });
-  }
-
-  Result<QVariant> m_result;
-  //  bool m_isFinished;
-
-  //  Q_PROPERTY(ResultCode code READ getCode NOTIFY finished)
-  Q_PROPERTY(QVariant data READ getDataVariant NOTIFY finished)
-  Q_PROPERTY(Error error READ getError NOTIFY finished)
-  Q_PROPERTY(bool isFinished READ getIsFinished NOTIFY finished)
 };
 
 template <typename T> class Promise final : public PromiseBase {
 public:
-  Promise(std::function<Result<T>()> work, QThread *pTargetThread)
-      : PromiseBase(nullptr), m_result(Error("result is empty stub")) {
+  using Result = tl::expected<T, Error>;
+
+  Promise(std::function<Result()> work, QThread *pTargetThread)
+      : PromiseBase(nullptr),
+        m_result(tl::make_unexpected(Error("result is empty stub"))) {
     if (pTargetThread)
       this->moveToThread(pTargetThread);
     doWork(work);
   }
 
-  Promise(std::function<Result<T>()> work, QObject *parent = nullptr)
-      : PromiseBase(parent), m_result(Error("result is empty stub")) {
+  Promise(std::function<Result()> work, QObject *parent = nullptr)
+      : PromiseBase(parent),
+        m_result(tl::make_unexpected(Error("result is empty stub"))) {
     doWork(work);
   };
 
 public:
-  Q_INVOKABLE void waitForFinished() const {
-    QEventLoop loop;
-    QObject::connect(this, &PromiseBase::finished, &loop, &QEventLoop::quit,
-                     Qt::QueuedConnection);
-
-    if (m_isFinished)
-      return;
-
-    loop.exec();
-  };
-
-  bool getIsFinished() const { return m_isFinished; }
-
-  Result<T> getResult() const {
-    Q_ASSERT(m_isFinished);
+  Result getResult() const {
+    Q_ASSERT(m_isFinished.load(std::memory_order_acquire));
     return m_result;
   }
 
+  virtual tl::expected<QVariant, Error> getVariantResult() const override {
+    Q_ASSERT(m_isFinished.load(std::memory_order_acquire));
+
+    if (!m_result.has_value()) {
+      return tl::make_unexpected(m_result.error());
+    }
+
+    return QVariant::fromValue(m_result.value());
+  }
+
 private:
-  void doWork(std::function<Result<T>()> work) {
+  void doWork(std::function<Result()> work) {
     auto ptr = QPointer<Promise<T>>(this);
     QTimer::singleShot(0, this, [ptr, work]() {
       if (!ptr) {
@@ -226,12 +99,73 @@ private:
       }
 
       ptr->m_result = work();
-      ptr->m_isFinished = true;
+      ptr->m_isFinished.store(true, std::memory_order_release);
       emit ptr->finished();
     });
   }
 
-  Result<T> m_result;
+  Result m_result;
+};
+
+class PromiseVariant : public QObject {
+  Q_OBJECT
+  //  Q_PROPERTY(bool isFinished READ isFinished)
+  //  Q_PROPERTY(bool isSucceeded READ isSucceeded)
+  //  Q_PROPERTY(QVariant data READ data) // TODO notify
+  //  Q_PROPERTY(Error error READ error)  // TODO notify
+public:
+  explicit PromiseVariant(PromiseBase *pPromise)
+      : QObject(pPromise), m_promise(pPromise) {
+    // if (!m_promise) return;  TODO check null and deleted
+
+    if (pPromise->getIsFinished()) {
+      onWrappedPromiseFinished();
+      return;
+    }
+
+    connect(m_promise, &PromiseBase::finished, this,
+            &PromiseVariant::onWrappedPromiseFinished, Qt::QueuedConnection);
+  }
+
+  Q_INVOKABLE bool isFinished() { return m_promise->getIsFinished(); }
+
+  Q_INVOKABLE bool isSucceeded() {
+    if (!m_promise->getIsFinished()) {
+      qWarning() << "promise not finished";
+      return false;
+    }
+
+    return m_promise->getVariantResult().has_value();
+  };
+
+  Q_INVOKABLE QVariant data() const {
+    if (!m_promise->getIsFinished() ||
+        !m_promise->getVariantResult().has_value()) {
+      return QVariant();
+    };
+    return m_promise->getVariantResult().value();
+  }
+
+  Q_INVOKABLE Error error() const {
+    if (!m_promise->getIsFinished()) {
+      return Error("promise not finished");
+    };
+
+    if (m_promise->getVariantResult().has_value()) {
+      return Error("promise complete without error, this is stub error");
+    }
+
+    return m_promise->getVariantResult().error();
+  }
+
+signals:
+  void finished();
+
+public slots:
+  void onWrappedPromiseFinished() { emit finished(); };
+
+private:
+  QPointer<PromiseBase> m_promise;
 };
 
 } // namespace Result

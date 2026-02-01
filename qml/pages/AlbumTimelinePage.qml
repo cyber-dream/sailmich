@@ -26,8 +26,8 @@ Page {
 
         const r = Albums.q_updateAlbumModel(tModel, albumInfo.id)
         r.finished.connect(function () {
-            if (!r.code().isSucceeded()) {
-                console.error(r.error)
+            if (!r.isSucceeded()) {
+                console.error(r.error())
             } else {
                 console.log("updateAlbumModels no errors")
             }

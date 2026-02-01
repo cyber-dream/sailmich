@@ -3,41 +3,30 @@ import Sailfish.Silica 1.0
 import Immich 1.0
 import "pages"
 
+import "./components/mediaviewer/"
+
 ApplicationWindow {
     initialPage: Component {
         Page {
-            //% "Welcome to Sailmich"
-            //: Greeting label on the main screen
-            //Label{text: qsTrId("helloworld")}
-            Label {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                text: Immich.initStatus
+            PageBusyIndicator {
+                running: true
             }
         }
     }
 
     Component.onCompleted: {
-        switch (Immich.initStatus) {
-        case Immich.InitStatusNotStarted:
-            //FIXME
-            break
-        case Immich.InitStatusStarted:
-            Immich.initResult.finished.connect(function () {
-                workWithInitResult(Immich.initStatus)
-            })
-            break
-        case Immich.InitStatusComplete:
+        var callback = function () {
+            Immich.isInitFinishedChanged.disconnect(callback)
             workWithInitResult(Immich.initStatus)
-            break
-        default:
-            //FIXME
-            break
         }
+
+        if (Immich.isInitFinished)
+            workWithInitResult(Immich.initStatus)
+        else
+            Immich.isInitFinishedChanged.connect(callback)
     }
 
     function workWithInitResult(status) {
-        status = 2
         switch (status) {
         case Immich.InitStatusBaseUrlNotFound:
             openAuthDialog()
@@ -45,26 +34,69 @@ ApplicationWindow {
         case Immich.InitStatusAuthTokenNotFound:
             openAuthDialog()
             break
-        case Immich.InitStatusApiPingFailed://FIXME
+        case Immich.InitStatusApiPingFailed:
+            openOfflinePage()
+            break
         case Immich.InitStatusTokenInvalid:
             openAuthDialog()
             break
-//        case Immich.InitStatusComplete:
-//            pageStack.replace(Qt.resolvedUrl("pages/MainPage.qml"), {})
-//            break
+        case Immich.InitStatusComplete:
+            openMainPage()
+            break
         default:
 
-            // FIXME
+            // TODO
         }
     }
-    function openAuthDialog() {
-        var dialog = pageStack.replace(Qt.resolvedUrl("pages/AuthDialog.qml"), {
-                                        "name": "aboa"
-                                    }, PageStackAction.Immediate)
-        dialog.accepted.connect(function () {
-            console.log(dialog.name)
-        })
+
+    function openMainPage() {
+        pageStack.clear()
+        pageStack.push(Qt.resolvedUrl("pages/MainPage.qml"), {})
     }
+
+    function openAuthDialog(error) {
+        //        pageStack.clear()
+        pageStack.push([loadingPageComponent, authDialogComponent], {})
+    }
+
+    function openOfflinePage() {
+        pageStack.clear()
+        pageStack.push([offlinePage], {})
+    }
+
+    Component {
+        id: authDialogComponent
+        AuthDialog {}
+    }
+
+    Component {
+        id: loadingPageComponent
+        AuthPage {}
+    }
+
+    Page {
+        id: offlinePage
+
+        Column {
+            width: parent.width
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: Theme.paddingLarge
+            InfoLabel {
+                text: "Can't connect to Immich server. Fix connectivity or choose another instance"
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "logout"
+                onClicked: {
+                    Immich.auth.q_logout()
+                    openAuthDialog()
+                }
+            }
+        }
+    }
+
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
 }

@@ -15,7 +15,9 @@ Page {
         header: Column {
             width: parent.width
             PageHeader {
-                title: "Albums"
+                //% "Albums"
+                //: Album in the plural
+                title: qsTrId("albumsPage.titleAlbums")
             }
 
             //            SearchField {
