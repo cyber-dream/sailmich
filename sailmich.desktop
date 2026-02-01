@@ -4,9 +4,8 @@ X-Nemo-Application-Type=silica-qt5
 Icon=sailmich
 Exec=sailmich
 Name=Sailmich
-Name[en]=Sailmich
-Name[ru]=Sailmich
-Name[nb]=Sailmich
+#Name[en]=Sailmich
+
 
 [X-Sailjail]
 Sandboxing=Disabled
