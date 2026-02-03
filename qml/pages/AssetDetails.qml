@@ -22,7 +22,7 @@ Page {
                 //% "Asset ID"
                 //: Uuid of Immich asset
                 label: qsTrId("common.assetId")
-                value: assetData.assetId.toString().replace(/{|}/g,"").toLowerCase()
+                value: assetData.Id.toString().replace(/{|}/g,"").toLowerCase()
             }
 
             DetailItem {

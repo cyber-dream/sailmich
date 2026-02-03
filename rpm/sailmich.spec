@@ -1,6 +1,6 @@
 Name:       sailmich
 
-Summary:    New auth & cosmetic update
+Summary:    New auth dialog, translations and visual enhancements
 Version:    0.2
 Release:    1
 License:    GPL-3.0

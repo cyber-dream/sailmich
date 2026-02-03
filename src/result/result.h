@@ -109,10 +109,6 @@ private:
 
 class PromiseVariant : public QObject {
   Q_OBJECT
-  //  Q_PROPERTY(bool isFinished READ isFinished)
-  //  Q_PROPERTY(bool isSucceeded READ isSucceeded)
-  //  Q_PROPERTY(QVariant data READ data) // TODO notify
-  //  Q_PROPERTY(Error error READ error)  // TODO notify
 public:
   explicit PromiseVariant(PromiseBase *pPromise)
       : QObject(pPromise), m_promise(pPromise) {

@@ -1,19 +1,13 @@
-# Rename this file as sailmich.changes to include changelog
-# entries in your RPM file.
-#
-# Add new changelog entries following the format below.
-# Add newest entries to the top of the list.
-# Separate entries from eachother with a blank line.
-#
-# Alternatively, if your changelog is automatically generated (e.g. with
-# the git-change-log command provided with Sailfish OS SDK), create a
-# sailmich.changes.run script to let mb2 run the required commands for you.
+* Tue Feb 03 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.2-1
+- New auth dialog
+- Zoom & panning in photo viewer
+- New translation (Russian, Norwegian Bokmål and Estonian)
+- Core optimizations
 
-# * date Author's Name <author's email> version-release
-# - Summary of changes
+* Sat Jan 24 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.1-2
+- Hotfix: cleanup old logs
 
-#* Sun Apr 13 2014 Jack Tar <jack.tar@example.com> 0.0.1-1
-#- Scrubbed the deck
-#- Hoisted the sails
+* Wed Jan 21 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.1-1
+- First release
 
 

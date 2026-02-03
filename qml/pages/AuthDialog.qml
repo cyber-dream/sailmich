@@ -113,9 +113,10 @@ Dialog {
         InfoLabel {
             id: errorLabel
             visible: errorMsg.length === 0 ? false : true
-            //% "Error: *error text*"
-            //: "Error" prefix for prepend error message
-            text: qsTrId("authPage.Error") + ": " + errorMsg
+            //% "Error"
+            //: "Error" prefix for prepend error message (Error: *error text*)
+//            text: qsTrId("authPage.Error") + ": " + errorMsg
+            text: "Error" + ": " + errorMsg // TODO will be translated in 0.3
             layer.enabled: true
             layer.effect: ShaderEffect {
                 property color color: Theme.errorColor

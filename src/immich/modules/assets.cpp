@@ -25,7 +25,7 @@ void ModAssets::requestThumbnail(QObject *model, const QUuid &assetId,
 
   {
     QMutexLocker locker(&m_mutexTimebucket);
-    qWarning() << "add" << assetId.toString() << "to queue";
+//    qWarning() << "add" << assetId.toString() << "to queue";
     if (isSkipQueue) {
       m_timebucketQueue.prepend(ThumbnailTask{model, assetId, size});
     } else {

@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-//TODO no anim on loader change
+//TODO fix fadeAnim when photo appears
 Loader {
     id: loader
     property var imageSource
@@ -39,11 +39,6 @@ Loader {
                 anchors.centerIn: parent
                 source: "image://theme/icon-m-image"
                 visible: isImageIconOnLoading
-            }
-
-            Component.onCompleted: opacity = 1.0
-            Behavior on opacity {
-                FadeAnimation {}
             }
         }
     }

@@ -44,14 +44,13 @@ Page {
     function onLoginResult(loginResult) {
         if (!loginResult.isSucceeded()) {
             error = loginResult.error().message
-            pageStack.pop()
             pageStack.push(Qt.resolvedUrl("AuthDialog.qml"), {
                                "errorMsg": loginResult.error().message
                            })
+            return
+        }
 
-            //            pageStack.nextPage(this).authErrorMessage = loginResult.error().message
-        } else
-            openMainPage()
+        openMainPage()
     }
 
     PageBusyIndicator {

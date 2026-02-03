@@ -50,8 +50,20 @@ ApplicationWindow {
     }
 
     function openMainPage() {
+        if (pageStack.busy) {
+            openMainPageTimer.start()
+            return
+        }
         pageStack.clear()
         pageStack.push(Qt.resolvedUrl("pages/MainPage.qml"), {})
+    }
+
+    Timer {
+        id: openMainPageTimer
+        interval: 100
+        repeat: false
+
+        onTriggered: openMainPage()
     }
 
     function openAuthDialog(error) {
@@ -77,22 +89,20 @@ ApplicationWindow {
     Page {
         id: offlinePage
 
-        Column {
-            width: parent.width
+        InfoLabel {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            spacing: Theme.paddingLarge
-            InfoLabel {
-                text: "Can't connect to Immich server. Fix connectivity or choose another instance"
-            }
+            text: "Unable to connect to the Immich server \n \nPlease resolve the connection issue and open the app again or login in to different instance"
+        }
 
-            Button {
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "logout"
-                onClicked: {
-                    Immich.auth.q_logout()
-                    openAuthDialog()
-                }
+        Button {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: Theme.paddingLarge*6
+            text: "logout"
+            onClicked: {
+                Immich.auth.q_logout()
+                openAuthDialog()
             }
         }
     }

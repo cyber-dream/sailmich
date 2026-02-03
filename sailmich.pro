@@ -13,9 +13,9 @@
 TARGET = sailmich
 
 CONFIG += sailfishapp
-CONFIG += debug
-QMAKE_CXXFLAGS_DEBUG += -O0 -g
-QMAKE_CFLAGS_DEBUG   += -O0 -g
+#CONFIG += debug
+#QMAKE_CXXFLAGS_DEBUG += -O0 -g
+#QMAKE_CFLAGS_DEBUG   += -O0 -g
 
 INCLUDEPATH += /usr/include/Sailfish
 LIBS += -lsailfishsecrets
@@ -120,6 +120,7 @@ SAILFISHAPP_LRELEASE = lrelease -idbased
 
 TRANSLATIONS += translations/sailmich-en_US.ts \
  translations/sailmich-nb_NO.ts \
- translations/sailmich-ru.ts
+ translations/sailmich-ru.ts \
+ translations/sailmich-et.ts
 
 

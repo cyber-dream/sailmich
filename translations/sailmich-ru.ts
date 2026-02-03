@@ -87,7 +87,7 @@
         <location filename="../qml/pages/AssetDetails.qml" line="57"/>
         <source>Live Id</source>
         <extracomment>Uuid of live photo/video asset</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Live Id</translation>
     </message>
     <message id="common.projectionType">
         <location filename="../qml/pages/AssetDetails.qml" line="63"/>
@@ -117,19 +117,19 @@
         <location filename="../qml/pages/AssetDetails.qml" line="87"/>
         <source>Is Favourite</source>
         <extracomment>Favourite or not bool flag</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>В избранном</translation>
     </message>
     <message id="common.isTrashed">
         <location filename="../qml/pages/AssetDetails.qml" line="98"/>
         <source>Is Trashed</source>
         <extracomment>Is this asset trashed bool flag</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>В корзине</translation>
     </message>
     <message id="common.localOffsetHours">
         <location filename="../qml/pages/AssetDetails.qml" line="108"/>
         <source>Local offset</source>
         <extracomment>Time Zone Offset from UTC+0 in hours</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Часовой пояс</translation>
     </message>
     <message id="common.latitude">
         <location filename="../qml/pages/AssetDetails.qml" line="114"/>
@@ -147,7 +147,7 @@
         <location filename="../qml/pages/AssetDetails.qml" line="126"/>
         <source>Visibility</source>
         <extracomment>Visibilty of asset (archive, timeline, hidden, locked)</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Область видимости</translation>
     </message>
     <message id="albumsPage.titleAlbums">
         <location filename="../qml/pages/AlbumsPage.qml" line="20"/>

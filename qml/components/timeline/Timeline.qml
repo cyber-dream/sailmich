@@ -35,6 +35,7 @@ SilicaListView {
     delegate: Loader {
         //TODO background item with reaction to tap
         id: gridLoader
+//        sourceComponent: stubGrid
         sourceComponent: timebucketModel.revealStatus
                          === TimelineTimeBucketModel.Complete ? dayRowGrid : stubGrid
         width: parent.width

@@ -110,7 +110,7 @@ void ModAlbum::processNextTimebucket() {
 
   const auto mod_assets = qobject_cast<Module::Assets::ModAssets *>(
       ImmichPlugin::assetsSingletonProvider(nullptr,
-                                            nullptr)); // TODO to class member
+                                            nullptr));
 
   while (it != end) {
     const QDate rowDate = it->fileCreatedAt.date();
