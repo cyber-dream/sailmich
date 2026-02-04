@@ -37,9 +37,11 @@ class ImmichPlugin : public QObject {
   Q_PROPERTY(Immich::Module::Auth::Auth *auth READ getAuth() CONSTANT)
   Q_PROPERTY(Immich::Module::Album::ModAlbum *album READ getAlbum() CONSTANT)
   Q_PROPERTY(InitStatus initStatus READ getInitStatus NOTIFY initStatusChanged)
-    Q_PROPERTY(bool isInitFinished READ getIsInitFinished NOTIFY isInitFinishedChanged)
+  Q_PROPERTY(
+      bool isInitFinished READ getIsInitFinished NOTIFY isInitFinishedChanged)
 public:
   explicit ImmichPlugin(QObject *parent = nullptr);
+    //TODO on desctruction save all opened files like logs, settings, etc
 
   void registerTypes(const char *uri);
 
@@ -64,7 +66,7 @@ public:
   static QObject *assetsSingletonProvider(QQmlEngine *, QJSEngine *);
 
   InitStatus getInitStatus() const { return m_initStatus; }
-  bool getIsInitFinished() const {return m_initStatus != InitStatusNotStarted;}
+  bool getIsInitFinished() const { return m_isInitFinished; }
 signals:
   void initStatusChanged();
   void isInitFinishedChanged();
@@ -88,7 +90,8 @@ private:
   Module::Ping::Ping *mod_ping = nullptr;
   Module::Secrets::BaseSecretsModule *m_secrets = nullptr;
 
-  InitStatus m_initStatus;
+  InitStatus m_initStatus = InitStatusNotStarted;
+  bool m_isInitFinished = false;
 };
 } // namespace Immich
 

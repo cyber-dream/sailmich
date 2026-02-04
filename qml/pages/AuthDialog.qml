@@ -3,11 +3,10 @@ import Sailfish.Silica 1.0
 
 Dialog {
     backNavigation: false
-//    property string authErrorMessage
 
-    //    property alias address: addressField.text
-    //    property alias email: emailField.text
-    //    property alias password: passwordField.text
+    property alias address: addressField.text
+    property alias email: emailField.text
+    property alias password: passwordField.text
     property string errorMsg: ""
 
     canAccept: addressField.acceptableInput && emailField.acceptableInput
@@ -49,7 +48,6 @@ Dialog {
             inputMethodHints: Qt.ImhUrlCharactersOnly | Qt.ImhNoPredictiveText
             errorHighlight: !acceptableInput && text.length > 0
 
-
             label: {
                 if (text.length > 0 && !acceptableInput) {
                     //% "Immich address with http/https protocol"
@@ -90,8 +88,6 @@ Dialog {
 
             labelVisible: text.length > 0 || (!acceptableInput
                                               && text.length > 0)
-
-
         }
 
         PasswordField {
@@ -103,8 +99,6 @@ Dialog {
             acceptableInput: text.length > 0
             errorHighlight: !acceptableInput && text.length > 0
 
-
-
             //% "Email"
             //: Form password field name
             label: qsTrId("authPage.passwordFieldName")
@@ -115,7 +109,7 @@ Dialog {
             visible: errorMsg.length === 0 ? false : true
             //% "Error"
             //: "Error" prefix for prepend error message (Error: *error text*)
-//            text: qsTrId("authPage.Error") + ": " + errorMsg
+            //            text: qsTrId("authPage.Error") + ": " + errorMsg
             text: "Error" + ": " + errorMsg // TODO will be translated in 0.3
             layer.enabled: true
             layer.effect: ShaderEffect {

@@ -45,7 +45,10 @@ Page {
         if (!loginResult.isSucceeded()) {
             error = loginResult.error().message
             pageStack.push(Qt.resolvedUrl("AuthDialog.qml"), {
-                               "errorMsg": loginResult.error().message
+                               "errorMsg": loginResult.error().message,
+                               "address" :address,
+                               "email"   :email,
+                               "password":password
                            })
             return
         }

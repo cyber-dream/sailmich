@@ -68,6 +68,7 @@ ImmichPlugin::ImmichPlugin(QObject *parent) : QObject(parent) {
 };
 
 void ImmichPlugin::registerTypes(const char *uri) {
+  qDebug() << "Immich types registraction";
   /*                Result                   */
 
   qmlRegisterUncreatableType<Result::PromiseVariant>(
@@ -172,6 +173,7 @@ void ImmichPlugin::registerTypes(const char *uri) {
 }
 
 void ImmichPlugin::startInit() {
+  qDebug() << "Immich plugin initialization";
   const auto res = new Result::Promise<ImmichPlugin::InitStatus>(
       [this]() -> Result::Result<ImmichPlugin::InitStatus> {
         m_initStatus = InitStatusStarted;
@@ -211,8 +213,7 @@ void ImmichPlugin::startInit() {
         }
 
         if (!reqObj->getResult().value()) { // TODO delete bad token
-          qWarning() << "token invalid:"
-                     << reqObj->getResult().error().message();
+          qWarning() << "token invalid: negative response from api";
           return {InitStatusTokenInvalid};
         }
 
@@ -221,12 +222,14 @@ void ImmichPlugin::startInit() {
       });
 
   connect(res, &Result::PromiseBase::finished, [this, res]() {
+    m_isInitFinished = true;
     if (!res->getResult().has_value()) {
-      qDebug() << "error in intialization"
-               << res->getResult().error().message();
+      qCritical() << "error in intialization"
+                  << res->getResult().error().message();
       return;
     }
 
+    qDebug() << "Immich init finished with result:" << res->getResult().value();
     this->m_initStatus = res->getResult().value();
     emit initStatusChanged();
     emit isInitFinishedChanged();

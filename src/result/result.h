@@ -114,13 +114,13 @@ public:
       : QObject(pPromise), m_promise(pPromise) {
     // if (!m_promise) return;  TODO check null and deleted
 
+    connect(m_promise, &PromiseBase::finished, this,
+            &PromiseVariant::onWrappedPromiseFinished, Qt::QueuedConnection);
+
     if (pPromise->getIsFinished()) {
       onWrappedPromiseFinished();
       return;
     }
-
-    connect(m_promise, &PromiseBase::finished, this,
-            &PromiseVariant::onWrappedPromiseFinished, Qt::QueuedConnection);
   }
 
   Q_INVOKABLE bool isFinished() { return m_promise->getIsFinished(); }

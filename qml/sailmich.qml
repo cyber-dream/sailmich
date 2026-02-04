@@ -6,14 +6,35 @@ import "pages"
 import "./components/mediaviewer/"
 
 ApplicationWindow {
-    initialPage: Component {
-        Page {
-            PageBusyIndicator {
-                running: true
-            }
-        }
-    }
 
+    //    initialPage: Component {
+    //        Page {
+    //            PageBusyIndicator {
+    //                id: busyIndicator
+    //                running: true
+    //            }
+
+    //            InfoLabel {
+    //                id: errorLabel
+    //                anchors.top: busyIndicator.top
+    //                anchors.topMargin: Theme.paddingLarge * 10
+    //                visible: text.length === 0 ? false : true
+    //                layer.enabled: true
+    //                layer.effect: ShaderEffect {
+    //                    property color color: Theme.errorColor
+    //                    fragmentShader: "
+    //varying highp vec2 qt_TexCoord0;
+    //uniform sampler2D source;
+    //uniform lowp vec4 color;
+    //uniform lowp float qt_Opacity;
+    //void main() {
+    //gl_FragColor = texture2D(source, qt_TexCoord0).a * color * qt_Opacity;
+    //}"
+    //                }
+    //            }
+
+    //        }
+    //    }
     Component.onCompleted: {
         var callback = function () {
             Immich.isInitFinishedChanged.disconnect(callback)
@@ -22,11 +43,37 @@ ApplicationWindow {
 
         if (Immich.isInitFinished)
             workWithInitResult(Immich.initStatus)
-        else
+        else {
             Immich.isInitFinishedChanged.connect(callback)
+            console.log("waiting for Immich init finish")
+        }
+    }
+
+    Page {
+        id: fatalErrorPage
+        property alias text: errorLabel.text
+        InfoLabel {
+            id: errorLabel
+            anchors.top: busyIndicator.top
+            anchors.topMargin: Theme.paddingLarge * 10
+            visible: text.length === 0 ? false : true
+            layer.enabled: true
+            layer.effect: ShaderEffect {
+                property color color: Theme.errorColor
+                fragmentShader: "
+varying highp vec2 qt_TexCoord0;
+uniform sampler2D source;
+uniform lowp vec4 color;
+uniform lowp float qt_Opacity;
+void main() {
+gl_FragColor = texture2D(source, qt_TexCoord0).a * color * qt_Opacity;
+}"
+            }
+        }
     }
 
     function workWithInitResult(status) {
+        console.log("Immich init status:", status)
         switch (status) {
         case Immich.InitStatusBaseUrlNotFound:
             openAuthDialog()
@@ -44,18 +91,22 @@ ApplicationWindow {
             openMainPage()
             break
         default:
+            console.error("unknown Immich init status:", status)
+            pageStack.replaceAbove(null, fatalErrorPage)
 
+            fatalErrorPage.text = "unknown Immich init status: " + status
             // TODO
         }
     }
 
     function openMainPage() {
         if (pageStack.busy) {
-            openMainPageTimer.start()
+            _waitingToOpenMain = true
             return
         }
-        pageStack.clear()
-        pageStack.push(Qt.resolvedUrl("pages/MainPage.qml"), {})
+
+        // Используем replaceAbove(null, ...) для полной очистки
+        pageStack.replaceAbove(null, Qt.resolvedUrl("pages/MainPage.qml"))
     }
 
     Timer {
@@ -98,7 +149,7 @@ ApplicationWindow {
         Button {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: Theme.paddingLarge*6
+            anchors.bottomMargin: Theme.paddingLarge * 6
             text: "logout"
             onClicked: {
                 Immich.auth.q_logout()

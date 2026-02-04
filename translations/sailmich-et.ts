@@ -4,45 +4,45 @@
 <context>
     <name></name>
     <message id="authPage.immichAccount">
-        <location filename="../qml/pages/AuthDialog.qml" line="34"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="33"/>
         <source>Immich Account</source>
         <extracomment>Label about account type</extracomment>
         <translation>Immichi kasutajakonto</translation>
     </message>
     <message id="authPage.Login">
-        <location filename="../qml/pages/AuthDialog.qml" line="37"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="36"/>
         <source>Login</source>
         <extracomment>DialogPage header start login button</extracomment>
         <translation>Logi sisse</translation>
     </message>
     <message id="authPage.addressHint">
-        <location filename="../qml/pages/AuthDialog.qml" line="57"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="55"/>
         <source>Immich address with http/https protocol</source>
         <extracomment>Address format hint in auth form (showing when regexp validator failed)</extracomment>
         <translation>Immichi serveri aadress koos http/https protokolliga</translation>
     </message>
     <message id="authPage.passwordFieldName">
-        <location filename="../qml/pages/AuthDialog.qml" line="101"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="97"/>
         <source>Password</source>
         <extracomment>Form password field name</extracomment>
         <translation>Salasõna</translation>
     </message>
     <message id="authPage.addressFieldName">
-        <location filename="../qml/pages/AuthDialog.qml" line="48"/>
-        <location filename="../qml/pages/AuthDialog.qml" line="61"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="47"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="59"/>
         <source>Address</source>
         <extracomment>Form address field name</extracomment>
         <translation>Aadress</translation>
     </message>
     <message id="authPage.emailFieldName">
-        <location filename="../qml/pages/AuthDialog.qml" line="72"/>
-        <location filename="../qml/pages/AuthDialog.qml" line="88"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="70"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="86"/>
         <source>Email</source>
         <extracomment>Form email field name</extracomment>
         <translation>E-post</translation>
     </message>
     <message id="authPage.emailHint">
-        <location filename="../qml/pages/AuthDialog.qml" line="84"/>
+        <location filename="../qml/pages/AuthDialog.qml" line="82"/>
         <source>Email of Immich account</source>
         <extracomment>Email format hint in auth form (showing when regexp validator failed)</extracomment>
         <translation>Immichi kasutajakonto e-posti aadress</translation>

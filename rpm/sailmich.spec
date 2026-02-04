@@ -1,8 +1,8 @@
 Name:       sailmich
 
-Summary:    New auth dialog, translations and visual enhancements
+Summary:    Hotfix translation
 Version:    0.2
-Release:    1
+Release:    2
 License:    GPL-3.0
 URL:        https://forum.sailfishos.org/t/native-immich-client/26075
 Source0:    %{name}-%{version}.tar.bz2
