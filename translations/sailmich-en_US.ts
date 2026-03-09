@@ -319,8 +319,7 @@
     </message>
     <message id="offlinePage.connectivityProblemHint">
         <location filename="../qml/pages/OfflinePage.qml" line="22"/>
-        <source>Please resolve the connection issue and open the app again or login in to different instance</source>
-        <oldsource>Unable to connect to the Immich server \n \nPlease resolve the connection issue and open the app again or login in to different instance</oldsource>
+        <source>Please resolve the connection issue and open the app again or login in to different instance</source
         <extracomment>Info label about problem with connectivity to the server</extracomment>
         <translation type="unfinished"></translation>
     </message>
