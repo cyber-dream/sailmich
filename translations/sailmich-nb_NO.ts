@@ -313,26 +313,32 @@
         <extracomment>Static description to album of trashed photos</extracomment>
         <translation type="unfinished"></translation>
     </message>
+    <message id="offlinePage.connectivityProblemError">
+        <location filename="../qml/pages/OfflinePage.qml" line="13"/>
+        <source>Unable to connect to the Immich server</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="offlinePage.connectivityProblemHint">
-        <location filename="../qml/pages/OfflinePage.qml" line="14"/>
-        <source>Unable to connect to the Immich server \n \nPlease resolve the connection issue and open the app again or login in to different instance</source>
-        <extracomment>Info label about problem with connectivity to the server. Please use &apos;/n&apos; symbol for text wrap as in the example</extracomment>
+        <location filename="../qml/pages/OfflinePage.qml" line="22"/>
+        <source>Please resolve the connection issue and open the app again or login in to different instance</source>
+        <oldsource>Unable to connect to the Immich server \n \nPlease resolve the connection issue and open the app again or login in to different instance</oldsource>
+        <extracomment>Info label about problem with connectivity to the server</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="offlinePage.retryButton">
-        <location filename="../qml/pages/OfflinePage.qml" line="34"/>
+        <location filename="../qml/pages/OfflinePage.qml" line="42"/>
         <source>retry</source>
         <extracomment>try to ping server button</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="offlinePage.logoutButton">
-        <location filename="../qml/pages/OfflinePage.qml" line="47"/>
+        <location filename="../qml/pages/OfflinePage.qml" line="55"/>
         <source>logout</source>
         <extracomment>logout button</extracomment>
         <translation type="unfinished"></translation>
     </message>
     <message id="settingsPage.logoutRemorseBannerTitle">
-        <location filename="../qml/pages/OfflinePage.qml" line="51"/>
+        <location filename="../qml/pages/OfflinePage.qml" line="59"/>
         <location filename="../qml/pages/SettingsPage.qml" line="21"/>
         <source>Logging out</source>
         <translation type="unfinished"></translation>
