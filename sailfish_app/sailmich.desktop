@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Application-Type=silica-qt5
+Icon=sailmich
+MimeType=x-scheme-handler/app.immich
+Exec=sailmich %u
+Name=Sailmich
+#Name[en]=Sailmich
+
+
+[X-Sailjail]
+Sandboxing=Disabled
+#OrganizationName=ru.brzezinski
+#ApplicationName=sailmich
+#Permissions=UserDirs;Internet;Secrets

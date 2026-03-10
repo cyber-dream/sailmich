@@ -1,0 +1,12 @@
+[submodule "src/QInjection"]
+	path = sailfish_app/src/third-party/QInjection
+	url = https://github.com/HamedMasafi/QInjection.git
+[submodule "sailfish_app/third-party/QInjection"]
+	path = sailfish_app/third-party/QInjection
+	url = https://github.com/HamedMasafi/QInjection.git
+[submodule "sailfish_app/third-party/optional"]
+	path = sailfish_app/third-party/optional
+	url = https://github.com/TartanLlama/optional.git
+[submodule "sailfish_app/third-party/expected"]
+	path = sailfish_app/third-party/expected
+	url = https://github.com/TartanLlama/expected.git
