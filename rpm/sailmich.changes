@@ -1,0 +1,22 @@
+* Tue Mar 10 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.3-1
+- New Auth UI using password, OAuth2 or API Token
+- New API client code
+- Timeline optimizations and fixes
+- Full albums list with favourites, archived and trashed
+- Update cover design (static yet)
+- Translations now use en_US for unfinished rows
+
+* Wed Feb 04 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.2-2
+- Hotfix: fallback translation option for untranslated languages
+
+* Tue Feb 03 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.2-1
+- New auth dialog
+- Zoom & panning in photo viewer
+- New translation (Russian, Norwegian Bokmål and Estonian)
+- Core optimizations
+
+* Sat Jan 24 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.1-2
+- Hotfix: cleanup old logs
+
+* Wed Jan 21 2026 Gregory Brzezinski <gregory_brzezinski@protonmail.com> 0.1-1
+- First release

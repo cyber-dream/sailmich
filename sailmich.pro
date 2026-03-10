@@ -8,6 +8,6 @@ SUBDIRS += \
 sailfish_app.depends = immichapi
 
 OTHER_FILES += \
+    rpm/sailmich.changes \
     rpm/sailmich.spec \
-    rpm/sailmich.changes.in \
     rpm/sailmich.changes.run.in
