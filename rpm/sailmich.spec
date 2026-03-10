@@ -24,7 +24,7 @@ Immich client
 
 %build
 
-%qmake5 
+%qmake5
 
 %make_build
 
